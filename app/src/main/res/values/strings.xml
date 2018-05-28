@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">TaskManagement</string>
+    <string name="ten_dang_nhap">username</string>
+    <string name="dang_ky">sign up</string>
+    <string name="dang_nhap">sign in</string>
+    <string name="mat_khau">password</string>
+    <string name="enter_username">Plese enter username</string>
+    <string name="enter_password">Plese enter password</string>
+    <string name="login_successfully">Login Successfully</string>
+    <string name="personal_board">Personal Board</string>
+    <string name="action_notification">Notifications</string>
+    <string name="action_search">Search</string>
+    <string name="create_board">Create board</string>
+    <string name="create">create</string>
+    <string name="cancel">cancel</string>
+</resources>

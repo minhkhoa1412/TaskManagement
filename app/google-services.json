@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "721827917927",
+    "firebase_url": "https://taskmanagement-b965a.firebaseio.com",
+    "project_id": "taskmanagement-b965a",
+    "storage_bucket": "taskmanagement-b965a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:721827917927:android:ca049afba3b62a30",
+        "android_client_info": {
+          "package_name": "com.minhkhoa.taskmanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "721827917927-68p5bi1hs9tlbfr862rcdl4o9htmr0eh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.minhkhoa.taskmanagement",
+            "certificate_hash": "9dfe2b54e4a7e29abc08b29a910b940ed38dc24e"
+          }
+        },
+        {
+          "client_id": "721827917927-02qoto9um0k3a6so6ur2kt2dp1ddafaq.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "721827917927-02qoto9um0k3a6so6ur2kt2dp1ddafaq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAg50K6GeabsBgE1PkVAOxFaDXr09btUM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "721827917927-02qoto9um0k3a6so6ur2kt2dp1ddafaq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
