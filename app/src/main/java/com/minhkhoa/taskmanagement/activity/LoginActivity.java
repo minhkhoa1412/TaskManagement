@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.minhkhoa.taskmanagement.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -54,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnLogin = findViewById(R.id.buttonlogin);
     }
 
-    protected void setStatusBarTranslucent(boolean makeTranslucent) {
+    private void setStatusBarTranslucent(boolean makeTranslucent) {
         if (makeTranslucent) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         } else {
@@ -89,7 +90,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void signUpUser(String email,String password){
+    private void signUpUser(final String email, String password){
         //check empty
         if(TextUtils.isEmpty(email)){
             Toast.makeText(this, getString(R.string.enter_username), Toast.LENGTH_SHORT).show();
@@ -103,6 +104,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Log.d("AAA","Sign Up Successfully");
+                    Intent intent = new Intent(LoginActivity.this,UpdateInfoActivity.class);
+                    Bundle bundle =  new Bundle();
+                    bundle.putString("user_email", email);
+                    intent.putExtra("bundleuser",bundle);
+                    startActivity(intent);
                 }
             }
         });

@@ -21,7 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.UpdateInfoActivity"></activity>
+        <activity
+            android:theme="@style/NoBarTheme"
+            android:name=".activity.UpdateInfoActivity"></activity>
     </application>
 
 </manifest>

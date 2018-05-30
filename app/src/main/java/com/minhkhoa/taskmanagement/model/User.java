@@ -1,16 +1,16 @@
 package com.minhkhoa.taskmanagement.model;
 
 public class User {
-    private int userID;
+    private String userID;
     private String userName;
-    private int userPermission;
+    private int userPermission = 0;
     private String userEmail;
-    private String userAvata;
+    private String userAvata = "https://firebasestorage.googleapis.com/v0/b/taskmanagement-b965a.appspot.com/o/hot-girl-3.jpg?alt=media&token=7beb21ab-9b10-4750-9108-eac61d85e47a";
 
     public User() {
     }
 
-    public User(int userID, String userName, int userPermission, String userEmail, String userAvata) {
+    public User(String userID, String userName, int userPermission, String userEmail, String userAvata) {
         this.userID = userID;
         this.userName = userName;
         this.userPermission = userPermission;
@@ -18,11 +18,11 @@ public class User {
         this.userAvata = userAvata;
     }
 
-    public int getUserID() {
+    public String getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 
