@@ -5,7 +5,8 @@ import android.graphics.Bitmap;
 import java.util.ArrayList;
 
 public class Board {
-    private int boardID;
+    private String boardID;
+    private String userID;
     private String boardName;
     private String boardImage;
     private ArrayList<User> userArrayList;
@@ -13,18 +14,19 @@ public class Board {
     public Board() {
     }
 
-    public Board(int boardID, String boardName, String boardImage, ArrayList<User> userArrayList) {
+    public Board(String boardID, String userID, String boardName, String boardImage, ArrayList<User> userArrayList) {
         this.boardID = boardID;
+        this.userID = userID;
         this.boardName = boardName;
         this.boardImage = boardImage;
         this.userArrayList = userArrayList;
     }
 
-    public int getBoardID() {
+    public String getBoardID() {
         return boardID;
     }
 
-    public void setBoardID(int boardID) {
+    public void setBoardID(String boardID) {
         this.boardID = boardID;
     }
 
@@ -50,5 +52,13 @@ public class Board {
 
     public void setUserArrayList(ArrayList<User> userArrayList) {
         this.userArrayList = userArrayList;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 }

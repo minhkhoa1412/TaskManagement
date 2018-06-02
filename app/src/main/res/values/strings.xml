@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">TaskManagement</string>
     <string name="ten_dang_nhap">email</string>
-    <string name="dang_ky">sign up</string>
-    <string name="dang_nhap">sign in</string>
+    <string name="dang_ky">Sign Up</string>
+    <string name="dang_nhap">Login</string>
     <string name="mat_khau">password</string>
     <string name="username">username</string>
     <string name="enter_username">Plese enter username</string>
@@ -16,4 +16,6 @@
     <string name="cancel">cancel</string>
     <string name="pick_image">Pick image</string>
     <string name="sign_out">Sign out</string>
+    <string name="agree">Agree</string>
+    <string name="sure_exit">Are you sure you want to exit app</string>
 </resources>

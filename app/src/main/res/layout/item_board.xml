@@ -1,48 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_item_board"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="16dp"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="120dp">
+
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:foreground="?android:attr/selectableItemBackground">
+
             <ImageView
                 android:id="@+id/image_large_board"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/image_test"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:src="@drawable/image_test" />
+
             <View
-                android:background="@drawable/gradient_board_1"
+                android:id="@+id/view_gradient"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_board_1" />
         </FrameLayout>
 
         <ImageView
             android:id="@+id/image_small_board"
-            android:scaleType="fitXY"
-            android:layout_margin="16dp"
-            android:src="@drawable/image_test"
-            android:layout_alignParentBottom="true"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="11dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/image_test" />
 
         <TextView
             android:id="@+id/textview_board"
-            android:layout_marginBottom="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="11dp"
             android:layout_toRightOf="@+id/image_small_board"
-            android:textStyle="bold"
+            android:text="Luan van cuoi ki"
             android:textColor="@android:color/white"
             android:textSize="18sp"
-            android:text="Luan van cuoi ki"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textStyle="bold" />
     </RelativeLayout>
+    x
 
 </LinearLayout>

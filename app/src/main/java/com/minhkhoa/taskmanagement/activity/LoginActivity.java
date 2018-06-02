@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,7 +27,8 @@ import com.minhkhoa.taskmanagement.R;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    Button btnSignUp, btnLogin;
+    Button  btnLogin;
+    TextView txtSignUp;
     EditText edtUsername, edtPassword;
     AnimationDrawable animationDrawable;
     RelativeLayout relativeLayout;
@@ -39,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setStatusBarTranslucent(true);
         addControls();
         //events
-        btnSignUp.setOnClickListener(this);
+        txtSignUp.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
         //set animation
         relativeLayout = findViewById(R.id.relative_layout);
@@ -49,10 +51,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void addControls() {
-        btnSignUp = findViewById(R.id.buttonsignup);
         edtUsername = findViewById(R.id.edittextusername);
         edtPassword = findViewById(R.id.editteampassword);
         btnLogin = findViewById(R.id.buttonlogin);
+        txtSignUp = findViewById(R.id.textviewsignup);
     }
 
     private void setStatusBarTranslucent(boolean makeTranslucent) {
@@ -66,9 +68,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         FirebaseUser user = firebaseAuth.getCurrentUser();
-//        Log.d("AAA", String.valueOf(user));
         if(user != null){
             startActivity(new Intent(LoginActivity.this,MainActivity.class));
+            finish();
         }
         super.onStart();
     }
@@ -81,7 +83,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        if(v == btnSignUp){
+        if(v == txtSignUp){
             signUpUser(edtUsername.getText().toString(),edtPassword.getText().toString());
         }
         if(v == btnLogin){
@@ -109,6 +111,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     bundle.putString("user_email", email);
                     intent.putExtra("bundleuser",bundle);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -129,6 +132,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if(task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, getString(R.string.login_successfully), Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                    finish();
                 }
             }
         });
