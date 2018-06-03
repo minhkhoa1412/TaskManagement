@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <EditText
+        android:inputType="textCapSentences"
         android:id="@+id/edittextnhap"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"

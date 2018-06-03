@@ -175,8 +175,6 @@ public class UpdateInfoActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        Log.d("AAA",String.valueOf(user.getUserAvata()));
-
         databaseReference.child("User").child(user.getUserID()).setValue(user);
 
         startActivity(new Intent(UpdateInfoActivity.this,MainActivity.class));

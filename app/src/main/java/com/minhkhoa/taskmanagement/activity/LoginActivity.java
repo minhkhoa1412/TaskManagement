@@ -86,7 +86,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             signUpUser(edtUsername.getText().toString(),edtPassword.getText().toString());
         }
         if(v == btnLogin){
-            Log.d("AAA","go in button login");
             logInUser(edtUsername.getText().toString(),edtPassword.getText().toString());
         }
     }
@@ -104,7 +103,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Log.d("AAA","Sign Up Successfully");
                     Intent intent = new Intent(LoginActivity.this,UpdateInfoActivity.class);
                     Bundle bundle =  new Bundle();
                     bundle.putString("user_email", email);

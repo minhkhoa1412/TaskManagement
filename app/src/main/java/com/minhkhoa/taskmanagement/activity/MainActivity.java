@@ -2,6 +2,7 @@ package com.minhkhoa.taskmanagement.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -35,6 +37,7 @@ import com.minhkhoa.taskmanagement.R;
 import com.minhkhoa.taskmanagement.adapter.BoardAdapter;
 import com.minhkhoa.taskmanagement.model.Board;
 import com.minhkhoa.taskmanagement.model.User;
+import com.minhkhoa.taskmanagement.util.Constant;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     CircleImageView imgAvata;
     TextView txtName;
     ListView lvBoard;
+    FloatingActionButton fab;
 
     ArrayList<Board> boardArrayList;
     BoardAdapter adapter;
@@ -72,18 +76,7 @@ public class MainActivity extends AppCompatActivity {
         addControls();
         init();
         getData();
-        dataDemo();
         getBoard();
-
-        findViewById(R.id.floattingbutton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog();
-            }
-        });
-
-        lvBoard.setAdapter(adapter);
-
         addEvents();
 
     }
@@ -92,12 +85,12 @@ public class MainActivity extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild("Board")){
+                if (dataSnapshot.hasChild("Board")) {
                     databaseReference.child("Board").addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                             Board board = dataSnapshot.getValue(Board.class);
-                            if(board.getUserID().equals(user_firebase.getUid())){
+                            if (board.getUserID().equals(user_firebase.getUid())) {
                                 boardArrayList.add(board);
                             }
                             adapter.notifyDataSetChanged();
@@ -137,25 +130,53 @@ public class MainActivity extends AppCompatActivity {
         lvBoard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, String.valueOf(position), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.POSITION_BOARD, position);
+                bundle.putString(Constant.BOARD_ID, boardArrayList.get(position).getBoardID());
+                bundle.putString(Constant.BOARD_NAME, boardArrayList.get(position).getBoardName());
+                intent.putExtra(Constant.BUNDLE_MAIN_TO_LIST, bundle);
+                startActivity(intent);
             }
         });
-    }
+        lvBoard.setOnScrollListener(new AbsListView.OnScrollListener() {
+            private int mLastFirstVisibleItem;
 
-    private void dataDemo() {
-        boardArrayList.add(new Board("1","asd", "Luận văn cuối kì", "https://kenh14cdn.com/2016/chominyeong12-1464720012078.jpg", null));
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (mLastFirstVisibleItem < firstVisibleItem && fab.getVisibility() == View.VISIBLE) {
+                    fab.hide();
+                }
+                if (mLastFirstVisibleItem > firstVisibleItem && fab.getVisibility() == View.GONE) {
+                    fab.show();
+                }
+                mLastFirstVisibleItem = firstVisibleItem;
+            }
+        });
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
     }
 
     private void init() {
         boardArrayList = new ArrayList<>();
         adapter = new BoardAdapter(MainActivity.this, boardArrayList);
         databaseReference.keepSynced(true);
+        lvBoard.setAdapter(adapter);
     }
 
     private void addControls() {
         imgAvata = findViewById(R.id.avata_main);
         txtName = findViewById(R.id.textview_name_main);
         lvBoard = findViewById(R.id.listview_main);
+        fab = findViewById(R.id.floattingbutton);
     }
 
     private void getData() {
@@ -188,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Search Menu Clicked", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.action_signout) {
             firebaseAuth.signOut();
-            startActivity(new Intent(MainActivity.this,LoginActivity.class));
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -223,16 +244,16 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void addBoard(String name){
-        key =  databaseReference.push().getKey();
+    public void addBoard(String name) {
+        key = databaseReference.push().getKey();
         board.setBoardID(key);
         board.setBoardName(name);
         board.setUserID(user_firebase.getUid());
         board.setUserArrayList(null);
     }
 
-    public void randomImageFormUnsplash(){
-        unsplash.getRandomPhoto("144067", null, null, null, null, null, "landscape", new Unsplash.OnPhotoLoadedListener() {
+    public void randomImageFormUnsplash() {
+        unsplash.getRandomPhoto("1116216", null, null, null, null, null, "landscape", new Unsplash.OnPhotoLoadedListener() {
             @Override
             public void onComplete(Photo photo) {
                 board.setBoardImage(photo.getUrls().getRegular());

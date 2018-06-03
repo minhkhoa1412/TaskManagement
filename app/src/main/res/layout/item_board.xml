@@ -36,16 +36,18 @@
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_margin="11dp"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:src="@drawable/image_test" />
 
         <TextView
             android:id="@+id/textview_board"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="11dp"
             android:layout_toRightOf="@+id/image_small_board"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="Luan van cuoi ki"
             android:textColor="@android:color/white"
             android:textSize="18sp"
