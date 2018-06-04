@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void randomImageFormUnsplash() {
-        unsplash.getRandomPhoto("1116216", null, null, null, null, null, "landscape", new Unsplash.OnPhotoLoadedListener() {
+        unsplash.getRandomPhoto(Constant.COLLECTION_ID, null, null, null, null, null, "landscape", new Unsplash.OnPhotoLoadedListener() {
             @Override
             public void onComplete(Photo photo) {
                 board.setBoardImage(photo.getUrls().getRegular());
