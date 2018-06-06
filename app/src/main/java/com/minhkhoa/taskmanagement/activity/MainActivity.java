@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_notifi) {
             Toast.makeText(this, "Noti Menu Clicked", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.action_search) {
-            Toast.makeText(this, "Search Menu Clicked", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(MainActivity.this,CardActivity.class));
         } else if (id == R.id.action_signout) {
             firebaseAuth.signOut();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
