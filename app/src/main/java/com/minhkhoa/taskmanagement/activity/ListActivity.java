@@ -71,7 +71,11 @@ public class ListActivity extends AppCompatActivity {
         lvList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(ListActivity.this, String.valueOf(position), Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                Intent intent = new Intent(ListActivity.this,CardActivity.class);
+                bundle.putString(Constant.LIST_ID,listKey);
+                intent.putExtra(Constant.BUNDLE_LIST_TO_CARD,bundle);
+                startActivity(intent);
             }
         });
         fab.setOnClickListener(new View.OnClickListener() {

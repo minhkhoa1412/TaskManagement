@@ -172,13 +172,12 @@ public class UpdateInfoActivity extends AppCompatActivity implements View.OnClic
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Uri uri = taskSnapshot.getDownloadUrl();
                 user.setUserAvata(String.valueOf(uri));
+                databaseReference.child("User").child(user.getUserID()).setValue(user);
             }
         });
 
-        databaseReference.child("User").child(user.getUserID()).setValue(user);
-
         startActivity(new Intent(UpdateInfoActivity.this,MainActivity.class));
-
+        finish();
     }
 
     @Override
