@@ -73,7 +73,7 @@ public class ListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle bundle = new Bundle();
                 Intent intent = new Intent(ListActivity.this,CardActivity.class);
-                bundle.putString(Constant.LIST_ID,listKey);
+                bundle.putString(Constant.LIST_ID,listArrayList.get(position).getListID());
                 intent.putExtra(Constant.BUNDLE_LIST_TO_CARD,bundle);
                 startActivity(intent);
             }

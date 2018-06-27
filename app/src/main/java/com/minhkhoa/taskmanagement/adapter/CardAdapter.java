@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.minhkhoa.taskmanagement.R;
 import com.minhkhoa.taskmanagement.model.Card;
@@ -32,6 +33,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         ViewHolder(View itemView) {
             super(itemView);
             txtTitle = itemView.findViewById(R.id.textview_title);
+            imgDesciption = itemView.findViewById(R.id.image_des);
+            llnInfomation = itemView.findViewById(R.id.linear_infomation);
         }
 
     }
@@ -66,7 +69,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int i) {
 //        noteViewHolder.txtThoiGian.setText(stf.format(congViecArrayList.get(i).getThoiGianBatDau()) + "-" + stf.format(congViecArrayList.get(i).getThoiGianKetThuc()));
-        viewHolder.txtTitle.setText("abc");
+        viewHolder.txtTitle.setText(cardArrayList.get(i).getCardName());
+        if(!cardArrayList.get(i).getCardDescription().matches("") || cardArrayList.get(i).getCardDeadline() != null ){
+            viewHolder.llnInfomation.setVisibility(View.VISIBLE);
+            if(!cardArrayList.get(i).getCardDescription().matches("")){
+                viewHolder.imgDesciption.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override

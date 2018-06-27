@@ -1,15 +1,30 @@
 package com.minhkhoa.taskmanagement.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.minhkhoa.taskmanagement.R;
 import com.minhkhoa.taskmanagement.adapter.CardAdapter;
 import com.minhkhoa.taskmanagement.model.Card;
@@ -22,18 +37,80 @@ public class CardActivity extends AppCompatActivity {
     RecyclerView rvCard;
     CardAdapter adapter;
     ArrayList<Card> cardArrayList;
+    FloatingActionButton fab;
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference databaseReference = database.getReference();
 
     String listID;
+    String key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
-        getSupportActionBar().setTitle(null);
+        getSupportActionBar().setTitle("Card");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         addControls();
         init();
         getDataFormList();
+        getDataFormFirebase();
+        addEvents();
+    }
+
+    private void getDataFormFirebase() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild("Card")){
+                    databaseReference.child("Card").addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            Card card = dataSnapshot.getValue(Card.class);
+                            if(card.getListID().equals(listID)){
+                                cardArrayList.add(card);
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void addEvents() {
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
     }
 
     private void getDataFormList() {
@@ -44,7 +121,6 @@ public class CardActivity extends AppCompatActivity {
 
     private void init() {
         cardArrayList = new ArrayList<>();
-        cardArrayList.add(new Card("asd","asdm","abc","abc",null,null,null));
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -56,5 +132,65 @@ public class CardActivity extends AppCompatActivity {
 
     private void addControls() {
         rvCard = findViewById(R.id.rv);
+        fab = findViewById(R.id.floattingbutton);
+    }
+
+    private void showDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(CardActivity.this);
+        builder.setTitle(R.string.create_card);
+        LayoutInflater inflater = CardActivity.this.getLayoutInflater();
+        View dialogview = inflater.inflate(R.layout.layout_dialog_card, null);
+        builder.setView(dialogview);
+        final EditText edtTitleCard = dialogview.findViewById(R.id.edittexttitle);
+        final EditText edtDescCard = dialogview.findViewById(R.id.edittextdescribe);
+        edtTitleCard.requestFocus();
+
+        builder.setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                addCard(edtTitleCard.getText().toString(),edtDescCard.getText().toString());
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        alertDialog.show();
+    }
+
+    private void addCard(String cardName, String cardDescribe){
+        key = databaseReference.push().getKey();
+        Card card = new Card();
+        card.setCardID(key);
+        card.setListID(listID);
+        card.setCardName(cardName);
+        card.setCardDescription(cardDescribe);
+        databaseReference.child("Card").child(key).setValue(card);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_list, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_search) {
+            Toast.makeText(this, "Search menu clicked", Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -20,4 +20,7 @@
     <string name="sure_exit">Are you sure you want to exit app</string>
     <string name="title_activity_list">ListActivity</string>
     <string name="create_list">Create list</string>
+    <string name="title">Title</string>
+    <string name="describe">Describe</string>
+    <string name="create_card">Create Card</string>
 </resources>
