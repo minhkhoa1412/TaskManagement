@@ -1,5 +1,6 @@
 package com.minhkhoa.taskmanagement.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -9,9 +10,11 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -63,12 +66,12 @@ public class CardActivity extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild("Card")){
+                if (dataSnapshot.hasChild("Card")) {
                     databaseReference.child("Card").addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                             Card card = dataSnapshot.getValue(Card.class);
-                            if(card.getListID().equals(listID)){
+                            if (card.getListID().equals(listID)) {
                                 cardArrayList.add(card);
                             }
                             adapter.notifyDataSetChanged();
@@ -111,6 +114,21 @@ public class CardActivity extends AppCompatActivity {
                 showDialog();
             }
         });
+        rvCard.addOnItemTouchListener(new RecyclerTouchListener(this, rvCard, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent = new Intent(CardActivity.this,CardDetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Constant.CARD_ARRAY_DETAILS,cardArrayList.get(position));
+                intent.putExtra(Constant.BUNDLE_CARD_TO_DETAILS,bundle);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
     }
 
     private void getDataFormList() {
@@ -124,7 +142,7 @@ public class CardActivity extends AppCompatActivity {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        adapter = new CardAdapter(CardActivity.this,cardArrayList);
+        adapter = new CardAdapter(CardActivity.this, cardArrayList);
 
         rvCard.setLayoutManager(layoutManager);
         rvCard.setAdapter(adapter);
@@ -148,7 +166,7 @@ public class CardActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                addCard(edtTitleCard.getText().toString(),edtDescCard.getText().toString());
+                addCard(edtTitleCard.getText().toString(), edtDescCard.getText().toString());
             }
         });
 
@@ -164,7 +182,7 @@ public class CardActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void addCard(String cardName, String cardDescribe){
+    private void addCard(String cardName, String cardDescribe) {
         key = databaseReference.push().getKey();
         Card card = new Card();
         card.setCardID(key);
@@ -192,5 +210,55 @@ public class CardActivity extends AppCompatActivity {
             Toast.makeText(this, "Search menu clicked", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    //onClickRecyclerview
+    private interface ClickListener {
+        void onClick(View view, int position);
+
+        void onLongClick(View view, int position);
+    }
+
+    private class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
+        private GestureDetector gestureDetector;
+        private CardActivity.ClickListener clickListener;
+
+        private RecyclerTouchListener(Context context, final RecyclerView recyclerView, final CardActivity.ClickListener clickListener) {
+            this.clickListener = clickListener;
+            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+
+                @Override
+                public void onLongPress(MotionEvent e) {
+                    View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                    if (child != null && clickListener != null) {
+                        clickListener.onLongClick(child, recyclerView.getChildPosition(child));
+                    }
+                }
+            });
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            View child = rv.findChildViewUnder(e.getX(), e.getY());
+            if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
+                clickListener.onClick(child, rv.getChildPosition(child));
+            }
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
     }
 }

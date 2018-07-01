@@ -23,4 +23,7 @@
     <string name="title">Title</string>
     <string name="describe">Describe</string>
     <string name="create_card">Create Card</string>
+    <string name="details">Details</string>
+    <string name="task">Task</string>
+    <string name="card_details">Card Details</string>
 </resources>

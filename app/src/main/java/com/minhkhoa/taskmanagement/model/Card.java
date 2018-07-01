@@ -1,9 +1,10 @@
 package com.minhkhoa.taskmanagement.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Card {
+public class Card implements Serializable {
     private String cardID;
     private String listID;
     private String cardName;

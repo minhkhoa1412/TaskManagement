@@ -68,7 +68,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int i) {
-//        noteViewHolder.txtThoiGian.setText(stf.format(congViecArrayList.get(i).getThoiGianBatDau()) + "-" + stf.format(congViecArrayList.get(i).getThoiGianKetThuc()));
+//        viewHolder.txtThoiGian.setText(stf.format(congViecArrayList.get(i).getThoiGianBatDau()) + "-" + stf.format(congViecArrayList.get(i).getThoiGianKetThuc()));
         viewHolder.txtTitle.setText(cardArrayList.get(i).getCardName());
         if(!cardArrayList.get(i).getCardDescription().matches("") || cardArrayList.get(i).getCardDeadline() != null ){
             viewHolder.llnInfomation.setVisibility(View.VISIBLE);

@@ -9,4 +9,7 @@ public class Constant {
     public static final String LIST_ID = "LIST_ID";
     public static final String LIST_NAME = "LIST_NAME";
     public static final String BUNDLE_LIST_TO_CARD = "BUNDLE_LIST_TO_CARD";
+    public static final String CARD_ARRAY_DETAILS = "CARD_ARRAY_DETAILS";
+    public static final String CARD_FRAGMENTS = "CARD_FRAGMENTS";
+    public static final String BUNDLE_CARD_TO_DETAILS = "BUNDLE_CARD_TO_DETAILS";
 }
