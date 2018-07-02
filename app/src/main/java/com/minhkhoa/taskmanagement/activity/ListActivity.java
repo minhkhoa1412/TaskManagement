@@ -74,6 +74,7 @@ public class ListActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 Intent intent = new Intent(ListActivity.this,CardActivity.class);
                 bundle.putString(Constant.LIST_ID,listArrayList.get(position).getListID());
+                bundle.putString(Constant.LIST_NAME,listArrayList.get(position).getListName());
                 intent.putExtra(Constant.BUNDLE_LIST_TO_CARD,bundle);
                 startActivity(intent);
             }

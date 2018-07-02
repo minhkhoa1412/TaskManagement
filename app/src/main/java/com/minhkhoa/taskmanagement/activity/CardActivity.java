@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -41,11 +42,13 @@ public class CardActivity extends AppCompatActivity {
     CardAdapter adapter;
     ArrayList<Card> cardArrayList;
     FloatingActionButton fab;
+    TextView txtListName;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = database.getReference();
 
     String listID;
+    String listName;
     String key;
 
     @Override
@@ -56,8 +59,8 @@ public class CardActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         addControls();
-        init();
         getDataFormList();
+        init();
         getDataFormFirebase();
         addEvents();
     }
@@ -135,6 +138,7 @@ public class CardActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra(Constant.BUNDLE_LIST_TO_CARD);
         listID = bundle.getString(Constant.LIST_ID);
+        listName = bundle.getString(Constant.LIST_NAME);
     }
 
     private void init() {
@@ -146,11 +150,14 @@ public class CardActivity extends AppCompatActivity {
 
         rvCard.setLayoutManager(layoutManager);
         rvCard.setAdapter(adapter);
+
+        txtListName.setText(listName);
     }
 
     private void addControls() {
         rvCard = findViewById(R.id.rv);
         fab = findViewById(R.id.floattingbutton);
+        txtListName = findViewById(R.id.list_name_card);
     }
 
     private void showDialog() {

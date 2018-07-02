@@ -26,10 +26,10 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textview_info"
+                android:id="@+id/textview_des"
+                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:text="Làm thể nào sử dụng Trello cho android trong danh sách Bắt đầu"
                 android:textColor="@android:color/white"
                 android:textStyle="italic" />
@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="14dp"
-                android:background="@drawable/gradient1" />
+                android:background="@drawable/gradient_ancent" />
         </LinearLayout>
     </ScrollView>
     <android.support.design.widget.FloatingActionButton

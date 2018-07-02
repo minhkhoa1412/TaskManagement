@@ -76,10 +76,12 @@ public class CardDetailsActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constant.CARD_FRAGMENTS,card);
         CardDetailsFragment cardDetailsFragment = new CardDetailsFragment();
+        CardTaskFragment cardTaskFragment = new CardTaskFragment();
         cardDetailsFragment.setArguments(bundle);
+        cardTaskFragment.setArguments(bundle);
 
         fragmentArrayList.add(cardDetailsFragment);
-        fragmentArrayList.add(new CardTaskFragment());
+        fragmentArrayList.add(cardTaskFragment);
 
         titleArrayList.add(getString(R.string.details));
         titleArrayList.add(getString(R.string.task));
