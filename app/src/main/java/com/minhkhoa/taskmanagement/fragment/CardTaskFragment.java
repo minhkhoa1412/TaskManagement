@@ -62,7 +62,7 @@ public class CardTaskFragment extends Fragment {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                             Task task = dataSnapshot.getValue(Task.class);
-                            taskArrayList.add(task);
+                            taskArrayList.add(0,task);
                             adapter.notifyDataSetChanged();
                         }
 

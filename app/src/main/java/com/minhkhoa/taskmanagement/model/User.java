@@ -1,6 +1,8 @@
 package com.minhkhoa.taskmanagement.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private String userID;
     private String userName;
     private int userPermission = 0;

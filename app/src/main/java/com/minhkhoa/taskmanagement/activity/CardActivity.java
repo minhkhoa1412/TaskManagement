@@ -23,6 +23,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.minhkhoa.taskmanagement.R;
 import com.minhkhoa.taskmanagement.adapter.CardAdapter;
 import com.minhkhoa.taskmanagement.model.Card;
+import com.minhkhoa.taskmanagement.model.User;
 import com.minhkhoa.taskmanagement.util.Constant;
 
 import java.util.ArrayList;
@@ -41,15 +44,19 @@ public class CardActivity extends AppCompatActivity {
     RecyclerView rvCard;
     CardAdapter adapter;
     ArrayList<Card> cardArrayList;
+    ArrayList<User> userArrayList;
     FloatingActionButton fab;
     TextView txtListName;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = database.getReference();
 
+    FirebaseUser user_firebase = FirebaseAuth.getInstance().getCurrentUser();
+
     String listID;
     String listName;
     String key;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +150,7 @@ public class CardActivity extends AppCompatActivity {
 
     private void init() {
         cardArrayList = new ArrayList<>();
+        userArrayList = new ArrayList<>();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -152,6 +160,22 @@ public class CardActivity extends AppCompatActivity {
         rvCard.setAdapter(adapter);
 
         txtListName.setText(listName);
+
+        databaseReference.child("User").child(user_firebase.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                user = dataSnapshot.getValue(User.class);
+                if(user != null){
+                    user.setUserPermission(1);
+                }
+                userArrayList.add(user);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void addControls() {
@@ -196,6 +220,7 @@ public class CardActivity extends AppCompatActivity {
         card.setListID(listID);
         card.setCardName(cardName);
         card.setCardDescription(cardDescribe);
+        card.setUserArrayList(userArrayList);
         databaseReference.child("Card").child(key).setValue(card);
     }
 
