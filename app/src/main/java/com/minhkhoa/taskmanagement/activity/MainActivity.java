@@ -60,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab;
 
     ArrayList<Board> boardArrayList;
+    ArrayList<User> userArrayList;
     BoardAdapter adapter;
+    User user;
 
     Unsplash unsplash = new Unsplash("df44c5fcfb97a0c6adb47ba2db0c96d125ac3f982b48341162b6fd1da573c9b0");
     Board board = new Board();
@@ -78,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         getData();
         getBoard();
         addEvents();
-
     }
 
     private void getBoard() {
@@ -98,7 +99,13 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                            Board board2 = dataSnapshot.getValue(Board.class);
+                            for(int i = 0; i < boardArrayList.size(); i++){
+                                if(boardArrayList.get(i).getBoardID().equals(board2.getBoardID())){
+                                    boardArrayList.set(i,board2);
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
                         }
 
                         @Override
@@ -167,9 +174,26 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         boardArrayList = new ArrayList<>();
+        userArrayList = new ArrayList<>();
         adapter = new BoardAdapter(MainActivity.this, boardArrayList);
         databaseReference.keepSynced(true);
         lvBoard.setAdapter(adapter);
+
+        databaseReference.child("User").child(user_firebase.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                user = dataSnapshot.getValue(User.class);
+                if(user != null){
+                    user.setUserPermission(1);
+                }
+                userArrayList.add(user);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void addControls() {
@@ -252,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
         board.setBoardID(key);
         board.setBoardName(name);
         board.setUserID(user_firebase.getUid());
-        board.setUserArrayList(null);
+        board.setUserArrayList(userArrayList);
     }
 
     public void randomImageFormUnsplash() {
@@ -268,5 +292,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

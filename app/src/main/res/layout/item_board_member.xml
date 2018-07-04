@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:background="@color/colorBackground"
-    android:layout_height="60dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <RelativeLayout
+        android:gravity="center_vertical"
+        android:layout_marginStart="16dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="60dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:src="@drawable/avata_test"
@@ -16,7 +18,7 @@
         <TextView
             android:id="@+id/textview_name_member"
             android:text="Thái Minh Khoa"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="16dp"
             android:layout_toRightOf="@+id/image_avata_member"
             android:textColor="@android:color/white"
             android:textSize="18sp"
@@ -26,21 +28,13 @@
         <TextView
             android:id="@+id/textview_email_member"
             android:text="minhkhoa@gmail.com"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="16dp"
             android:layout_toRightOf="@+id/image_avata_member"
             android:layout_below="@+id/textview_name_member"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        <ImageButton
-            android:layout_marginEnd="5dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_remove_circle_outline_black_24dp"
-            android:id="@+id/button_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+
     </RelativeLayout>
 </LinearLayout>

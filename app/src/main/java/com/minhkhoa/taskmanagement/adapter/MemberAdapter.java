@@ -5,10 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.minhkhoa.taskmanagement.R;
 import com.minhkhoa.taskmanagement.model.Card;
 import com.minhkhoa.taskmanagement.model.User;
@@ -25,23 +28,31 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder> {
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference databaseReference = database.getReference();
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtName, txtEmail;
         CircleImageView imgAvata;
+        ImageButton btnDelete;
 
         ViewHolder(View itemView) {
             super(itemView);
             txtName = itemView.findViewById(R.id.textview_name_member);
             txtEmail = itemView.findViewById(R.id.textview_email_member);
             imgAvata = itemView.findViewById(R.id.image_avata_member);
+            btnDelete = itemView.findViewById(R.id.button_delete);
         }
 
     }
 
     @Override
     public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+        if(position == 0){
+            return 0;//admin
+        } else {
+            return 1;//user
+        }
     }
 
     @Override
@@ -54,10 +65,12 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
 
     private ArrayList<User> userArrayList;
     private Context context;
+    private String cardID;
 
-    public MemberAdapter(Context context, ArrayList<User> userArrayList) {
+    public MemberAdapter(Context context, ArrayList<User> userArrayList,String cardID) {
         this.context = context;
         this.userArrayList = userArrayList;
+        this.cardID = cardID;
     }
 
     @Override
@@ -68,6 +81,19 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int i) {
+        if(i == 0){
+            viewHolder.btnDelete.setVisibility(View.GONE);
+        }
+
+        viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userArrayList.remove(i);
+                databaseReference.child("Card").child(cardID).child("userArrayList").setValue(userArrayList);
+                notifyDataSetChanged();
+            }
+        });
+
         Picasso.get().load(userArrayList.get(i).getUserAvata()).into(viewHolder.imgAvata);
         viewHolder.txtName.setText(userArrayList.get(i).getUserName());
         viewHolder.txtEmail.setText(userArrayList.get(i).getUserEmail());

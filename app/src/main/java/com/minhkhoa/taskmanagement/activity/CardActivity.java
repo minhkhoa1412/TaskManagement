@@ -56,6 +56,7 @@ public class CardActivity extends AppCompatActivity {
     String listID;
     String listName;
     String key;
+    String boardID;
     User user;
 
     @Override
@@ -129,6 +130,7 @@ public class CardActivity extends AppCompatActivity {
             public void onClick(View view, int position) {
                 Intent intent = new Intent(CardActivity.this,CardDetailsActivity.class);
                 Bundle bundle = new Bundle();
+                bundle.putString(Constant.BOARD_ID_FOR_CHAT_CARD,boardID);
                 bundle.putSerializable(Constant.CARD_ARRAY_DETAILS,cardArrayList.get(position));
                 intent.putExtra(Constant.BUNDLE_CARD_TO_DETAILS,bundle);
                 startActivity(intent);
@@ -144,6 +146,7 @@ public class CardActivity extends AppCompatActivity {
     private void getDataFormList() {
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra(Constant.BUNDLE_LIST_TO_CARD);
+        boardID = bundle.getString(Constant.BOARD_ID_FOR_CHAT_CARD);
         listID = bundle.getString(Constant.LIST_ID);
         listName = bundle.getString(Constant.LIST_NAME);
     }
@@ -213,6 +216,36 @@ public class CardActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    private void showDialogEdit() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(CardActivity.this);
+        builder.setTitle(R.string.edit);
+        LayoutInflater inflater = CardActivity.this.getLayoutInflater();
+        View dialogview = inflater.inflate(R.layout.layout_dialog, null);
+        builder.setView(dialogview);
+        final EditText edtEdit = dialogview.findViewById(R.id.edittextnhap);
+        edtEdit.setText(listName);
+        edtEdit.requestFocus();
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                databaseReference.child("List").child(listID).child("listName").setValue(edtEdit.getText().toString());
+                txtListName.setText(edtEdit.getText().toString());
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        alertDialog.show();
+    }
+
     private void addCard(String cardName, String cardDescribe) {
         key = databaseReference.push().getKey();
         Card card = new Card();
@@ -232,14 +265,17 @@ public class CardActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_list, menu);
+        getMenuInflater().inflate(R.menu.menu_card, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_search) {
-            Toast.makeText(this, "Search menu clicked", Toast.LENGTH_SHORT).show();
+        if (item.getItemId() == R.id.action_edit) {
+            showDialogEdit();
+        }
+        if(item.getItemId() == R.id.action_delete){
+
         }
         return super.onOptionsItemSelected(item);
     }

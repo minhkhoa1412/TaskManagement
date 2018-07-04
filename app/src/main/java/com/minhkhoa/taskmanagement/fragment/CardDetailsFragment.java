@@ -2,6 +2,7 @@ package com.minhkhoa.taskmanagement.fragment;
 
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +18,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -38,10 +41,13 @@ import com.minhkhoa.taskmanagement.model.Card;
 import com.minhkhoa.taskmanagement.model.User;
 import com.minhkhoa.taskmanagement.util.Constant;
 import com.minhkhoa.taskmanagement.util.SimpleDayFormat;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CardDetailsFragment extends Fragment {
 
@@ -59,6 +65,7 @@ public class CardDetailsFragment extends Fragment {
     TextView txtCardName, txtCardDesciption, txtTag, txtDeadline;
 
     ArrayList<Integer> a;
+    String boardID;
     ArrayList<User> userArrayList;
     Calendar calendar = Calendar.getInstance();
     MemberAdapter adapter;
@@ -140,7 +147,38 @@ public class CardDetailsFragment extends Fragment {
         fab.hide();
         card = (Card) getArguments().getSerializable(Constant.CARD_FRAGMENTS);
 
-        adapter = new MemberAdapter(getContext(),card.getUserArrayList());
+        boardID = getArguments().getString(Constant.BOARD_ID_FOR_CHAT_CARD);
+        userArrayList = new ArrayList<>();
+        databaseReference.child("Board").child(boardID).child("userArrayList").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                User user = dataSnapshot.getValue(User.class);
+                userArrayList.add(user);
+                Log.d("aaa",userArrayList.size() +"");
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        adapter = new MemberAdapter(getContext(),card.getUserArrayList(),card.getCardID());
         LinearLayoutManager llm = new LinearLayoutManager(getContext()){
             @Override
             public boolean canScrollVertically() {
@@ -390,19 +428,73 @@ public class CardDetailsFragment extends Fragment {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(R.string.add_member);
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View dialogview = inflater.inflate(R.layout.layout_dialog, null);
+        final View dialogview = inflater.inflate(R.layout.layout_dialog_card_details, null);
         builder.setView(dialogview);
-        final EditText edtMemberEmail = dialogview.findViewById(R.id.edittextnhap);
-        edtMemberEmail.requestFocus();
 
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        final ListView lvMember = dialogview.findViewById(R.id.listview_member_dialog);
+
+        class MemberDialogAdapter extends BaseAdapter {
+            Context context;
+            ArrayList<User> userArrayList;
+            LayoutInflater inflater;
+
+            public MemberDialogAdapter(Context context, ArrayList<User> userArrayList) {
+                this.context = context;
+                this.userArrayList = userArrayList;
+                inflater = LayoutInflater.from(context);
+            }
+
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public int getCount() {
+                return userArrayList.size();
+            }
+
+            @Override
+            public Object getItem(int position) {
+                return userArrayList.get(position);
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return position;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                convertView = inflater.inflate(R.layout.item_dialog_member,null);
+                CircleImageView imgAvata = convertView.findViewById(R.id.image_avata_member);
+                TextView txtName = convertView.findViewById(R.id.textview_name_member);
+                TextView txtEmail = convertView.findViewById(R.id.textview_email_member);
+                Picasso.get().load(userArrayList.get(position).getUserAvata()).into(imgAvata);
+                txtName.setText(userArrayList.get(position).getUserName());
+                txtEmail.setText(userArrayList.get(position).getUserEmail());
+                return convertView;
+            }
+        }
+
+        MemberDialogAdapter adapterDialog = new MemberDialogAdapter(getContext(),userArrayList);
+        lvMember.setAdapter(adapterDialog);
+
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        alertDialog.show();
+
+        for(int i = 0; i < card.getUserArrayList().size(); i++){
+            for(int j =0; j< userArrayList.size(); j++){
+                if(card.getUserArrayList().get(i).getUserEmail().equals(userArrayList.get(j).getUserEmail())){
+                    userArrayList.remove(j);
+                }
+            }
+        }
+
+        lvMember.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 databaseReference.child("User").addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         User user = dataSnapshot.getValue(User.class);
-                        if(user.getUserEmail().equals(edtMemberEmail.getText().toString())){
+                        if(user.getUserEmail().equals(userArrayList.get(position).getUserEmail())){
                             card.getUserArrayList().add(user);
                             databaseReference.child("Card").child(card.getCardID()).child("userArrayList").setValue(card.getUserArrayList());
                         }
@@ -429,18 +521,8 @@ public class CardDetailsFragment extends Fragment {
 
                     }
                 });
+                alertDialog.dismiss();
             }
         });
-
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        alertDialog.show();
     }
 }

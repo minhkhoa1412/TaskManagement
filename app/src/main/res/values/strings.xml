@@ -36,4 +36,11 @@
     <string name="member">Member list</string>
     <string name="chat">Chat</string>
     <string name="add_member">Add member</string>
+    <string name="member_and_chat">Member and chat</string>
+    <string name="enter_member">Enter email user</string>
+    <string name="already_have_member">Already has this member</string>
+    <string name="no_member">No member has this email</string>
+    <string name="add_success">Member successfully added</string>
+    <string name="delete">Delete</string>
+    <string name="archive">Archive</string>
 </resources>

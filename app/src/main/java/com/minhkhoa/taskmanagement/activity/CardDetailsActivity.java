@@ -32,6 +32,7 @@ public class CardDetailsActivity extends AppCompatActivity {
 
     String cardID;
     String cardName;
+    String boardID;
     Card card;
 
     @Override
@@ -41,20 +42,8 @@ public class CardDetailsActivity extends AppCompatActivity {
 
         addControls();
         getDataFormCardActivity();
-        passDataToFragments();
         init();
         prepareUI();
-        addEvents();
-    }
-
-    private void passDataToFragments() {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Constant.CARD_FRAGMENTS,card);
-        CardDetailsFragment a = new CardDetailsFragment();
-        a.setArguments(bundle);
-    }
-
-    private void addEvents() {
     }
 
     private void prepareUI() {
@@ -66,6 +55,7 @@ public class CardDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra(Constant.BUNDLE_CARD_TO_DETAILS);
         card = (Card) bundle.getSerializable(Constant.CARD_ARRAY_DETAILS);
+        boardID = bundle.getString(Constant.BOARD_ID_FOR_CHAT_CARD);
         cardID = card.getCardID();
         cardName = card.getCardName();
     }
@@ -75,12 +65,14 @@ public class CardDetailsActivity extends AppCompatActivity {
         titleArrayList = new ArrayList<>();
 
         Bundle bundle = new Bundle();
+        bundle.putString(Constant.BOARD_ID_FOR_CHAT_CARD,boardID);
         bundle.putSerializable(Constant.CARD_FRAGMENTS,card);
         CardDetailsFragment cardDetailsFragment = new CardDetailsFragment();
         CardTaskFragment cardTaskFragment = new CardTaskFragment();
         CardChatFragment cardChatFragment = new CardChatFragment();
         cardDetailsFragment.setArguments(bundle);
         cardTaskFragment.setArguments(bundle);
+        cardChatFragment.setArguments(bundle);
 
         fragmentArrayList.add(cardDetailsFragment);
         fragmentArrayList.add(cardTaskFragment);

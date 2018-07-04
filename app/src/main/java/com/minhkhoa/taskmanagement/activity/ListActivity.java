@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.minhkhoa.taskmanagement.R;
 import com.minhkhoa.taskmanagement.adapter.ListAdapter;
+import com.minhkhoa.taskmanagement.model.Board;
 import com.minhkhoa.taskmanagement.model.List;
 import com.minhkhoa.taskmanagement.util.Constant;
 
@@ -44,6 +45,7 @@ public class ListActivity extends AppCompatActivity {
     String listKey;
     ArrayList<List> listArrayList;
     ListAdapter adapter;
+    Board board;
 
     View viewTitle;
     TextView txtTitle;
@@ -60,7 +62,6 @@ public class ListActivity extends AppCompatActivity {
         addControls();
         init();
         getDataFormMain();
-        //prepare layout
         prepareUI();
         getDataListFormFirebase();
         addEvents();
@@ -75,6 +76,7 @@ public class ListActivity extends AppCompatActivity {
                 Intent intent = new Intent(ListActivity.this,CardActivity.class);
                 bundle.putString(Constant.LIST_ID,listArrayList.get(position).getListID());
                 bundle.putString(Constant.LIST_NAME,listArrayList.get(position).getListName());
+                bundle.putString(Constant.BOARD_ID_FOR_CHAT_CARD,boardID);
                 intent.putExtra(Constant.BUNDLE_LIST_TO_CARD,bundle);
                 startActivity(intent);
             }
@@ -115,15 +117,23 @@ public class ListActivity extends AppCompatActivity {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                             List list = dataSnapshot.getValue(List.class);
-                            if (list.getBoardID().equals(boardID)) {
-                                listArrayList.add(list);
+                            if(list != null){
+                                if (list.getBoardID().equals(boardID)) {
+                                    listArrayList.add(list);
+                                }
                             }
                             adapter.notifyDataSetChanged();
                         }
 
                         @Override
                         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                            List list1 = dataSnapshot.getValue(List.class);
+                            for(int i = 0; i < listArrayList.size(); i++){
+                                if(listArrayList.get(i).getListID().equals(list1.getListID())){
+                                    listArrayList.set(i,list1);
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
                         }
 
                         @Override
@@ -142,6 +152,18 @@ public class ListActivity extends AppCompatActivity {
                         }
                     });
                 }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        databaseReference.child("Board").child(boardID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                board = dataSnapshot.getValue(Board.class);
             }
 
             @Override
@@ -201,8 +223,18 @@ public class ListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_search) {
-            Toast.makeText(this, "Search menu clicked", Toast.LENGTH_SHORT).show();
+        if (item.getItemId() == R.id.action_member) {
+            Intent intent = new Intent(ListActivity.this,ChatActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constant.BOARD_CHAT,board);
+            intent.putExtra(Constant.BUNDLE_LIST_TO_CHAT,bundle);
+            startActivity(intent);
+        }
+        if(item.getItemId() == R.id.action_delete){
+
+        }
+        if(item.getItemId() == R.id.action_edit){
+            showDialogEdit();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -220,6 +252,36 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 addList(edtCreateList.getText().toString());
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        alertDialog.show();
+    }
+
+    private void showDialogEdit() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
+        builder.setTitle(R.string.edit);
+        LayoutInflater inflater = ListActivity.this.getLayoutInflater();
+        View dialogview = inflater.inflate(R.layout.layout_dialog, null);
+        builder.setView(dialogview);
+        final EditText edtEdit = dialogview.findViewById(R.id.edittextnhap);
+        edtEdit.setText(boardName);
+        edtEdit.requestFocus();
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                databaseReference.child("Board").child(boardID).child("boardName").setValue(edtEdit.getText().toString());
+                txtTitle.setText(edtEdit.getText().toString());
             }
         });
 

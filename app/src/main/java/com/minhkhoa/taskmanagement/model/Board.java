@@ -2,9 +2,10 @@ package com.minhkhoa.taskmanagement.model;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Board {
+public class Board implements Serializable{
     private String boardID;
     private String userID;
     private String boardName;
