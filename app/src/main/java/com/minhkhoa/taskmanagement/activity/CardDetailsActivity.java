@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.minhkhoa.taskmanagement.R;
 import com.minhkhoa.taskmanagement.adapter.FragmentsAdapter;
+import com.minhkhoa.taskmanagement.fragment.CardChatFragment;
 import com.minhkhoa.taskmanagement.fragment.CardDetailsFragment;
 import com.minhkhoa.taskmanagement.fragment.CardTaskFragment;
 import com.minhkhoa.taskmanagement.model.Card;
@@ -77,14 +78,17 @@ public class CardDetailsActivity extends AppCompatActivity {
         bundle.putSerializable(Constant.CARD_FRAGMENTS,card);
         CardDetailsFragment cardDetailsFragment = new CardDetailsFragment();
         CardTaskFragment cardTaskFragment = new CardTaskFragment();
+        CardChatFragment cardChatFragment = new CardChatFragment();
         cardDetailsFragment.setArguments(bundle);
         cardTaskFragment.setArguments(bundle);
 
         fragmentArrayList.add(cardDetailsFragment);
         fragmentArrayList.add(cardTaskFragment);
+        fragmentArrayList.add(cardChatFragment);
 
         titleArrayList.add(getString(R.string.details));
         titleArrayList.add(getString(R.string.task));
+        titleArrayList.add(getString(R.string.chat));
 
         adapter = new FragmentsAdapter(getSupportFragmentManager(),fragmentArrayList,titleArrayList);
         viewPager.setAdapter(adapter);

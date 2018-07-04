@@ -173,6 +173,7 @@ public class UpdateInfoActivity extends AppCompatActivity implements View.OnClic
                 Uri uri = taskSnapshot.getDownloadUrl();
                 user.setUserAvata(String.valueOf(uri));
                 databaseReference.child("User").child(user.getUserID()).setValue(user);
+                Toast.makeText(UpdateInfoActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
             }
         });
 

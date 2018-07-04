@@ -1,39 +1,67 @@
 package com.minhkhoa.taskmanagement.fragment;
 
 
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.text.InputType;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.minhkhoa.taskmanagement.R;
-import com.minhkhoa.taskmanagement.activity.CardActivity;
+import com.minhkhoa.taskmanagement.adapter.MemberAdapter;
 import com.minhkhoa.taskmanagement.model.Card;
+import com.minhkhoa.taskmanagement.model.User;
 import com.minhkhoa.taskmanagement.util.Constant;
+import com.minhkhoa.taskmanagement.util.SimpleDayFormat;
 
-import org.w3c.dom.Text;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 public class CardDetailsFragment extends Fragment {
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference databaseReference = database.getReference();
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     FloatingActionButton fab;
     View view;
     Card card;
+    RecyclerView rvMember;
+    ImageButton btnAddTag, btnaddDeadline, btnAddMember;
+    LinearLayout llnTag;
+    ImageView imgTagOne, imgTagTwo, imgTagThere, imgTagFour, imgTagFive;
+    TextView txtCardName, txtCardDesciption, txtTag, txtDeadline;
 
-    TextView txtCardName, txtCardDesciption;
+    ArrayList<Integer> a;
+    ArrayList<User> userArrayList;
+    Calendar calendar = Calendar.getInstance();
+    MemberAdapter adapter;
 
     @Nullable
     @Override
@@ -41,6 +69,7 @@ public class CardDetailsFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_card_details, container, false);
         addControls();
         init();
+        showTag();
         addEvents();
         return view;
     }
@@ -60,17 +89,66 @@ public class CardDetailsFragment extends Fragment {
             }
         });
 
+        btnAddTag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card.getCardTag() == null) {
+                    a = new ArrayList<>();
+                    showDialogTag(a);
+                } else {
+                    showDialogTag(card.getCardTag());
+                }
+
+            }
+        });
+
+        btnaddDeadline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickDate();
+            }
+        });
+
+        btnAddMember.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addMember();
+            }
+        });
+
     }
 
     private void addControls() {
         fab = view.findViewById(R.id.fab_fragments);
         txtCardName = view.findViewById(R.id.textview_title);
         txtCardDesciption = view.findViewById(R.id.textview_des);
+        llnTag = view.findViewById(R.id.linear_tag);
+        imgTagOne = view.findViewById(R.id.tag1_item);
+        imgTagTwo = view.findViewById(R.id.tag2_item);
+        imgTagThere = view.findViewById(R.id.tag3_item);
+        imgTagFour = view.findViewById(R.id.tag4_item);
+        imgTagFive = view.findViewById(R.id.tag5_item);
+        btnAddTag = view.findViewById(R.id.button_edit_tag);
+        txtTag = view.findViewById(R.id.textview_tag);
+        txtDeadline = view.findViewById(R.id.textview_deadline);
+        btnaddDeadline = view.findViewById(R.id.button_edit_deadline);
+        btnAddMember = view.findViewById(R.id.button_add_member);
+        rvMember = view.findViewById(R.id.rv_member);
     }
 
     private void init() {
         fab.hide();
         card = (Card) getArguments().getSerializable(Constant.CARD_FRAGMENTS);
+
+        adapter = new MemberAdapter(getContext(),card.getUserArrayList());
+        LinearLayoutManager llm = new LinearLayoutManager(getContext()){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        rvMember.setAdapter(adapter);
+        rvMember.setLayoutManager(llm);
 
         txtCardName.setText(card.getCardName());
         if (card.getCardDescription().matches("")) {
@@ -78,6 +156,10 @@ public class CardDetailsFragment extends Fragment {
             txtCardDesciption.setTextColor(getResources().getColor(R.color.gray));
         } else {
             txtCardDesciption.setText(card.getCardDescription());
+        }
+
+        if (card.getCardDeadline() != null) {
+            txtDeadline.setText(getString(R.string.expires) + " " + SimpleDayFormat.formatDate(card.getCardDeadline()));
         }
     }
 
@@ -94,7 +176,7 @@ public class CardDetailsFragment extends Fragment {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                databaseReference.child("Card").child(card.getCardID()).child("cardName").setValue(edtTitleCard.getText().toString());
             }
         });
 
@@ -123,7 +205,230 @@ public class CardDetailsFragment extends Fragment {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                databaseReference.child("Card").child(card.getCardID()).child("cardDescription").setValue(edtTitleCard.getText().toString());
+            }
+        });
 
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        alertDialog.show();
+    }
+
+    private void showDialogTag(final ArrayList<Integer> cardTag) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(R.string.edit);
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View dialogview = inflater.inflate(R.layout.layout_dialog_tag, null);
+        builder.setView(dialogview);
+
+        CheckBox ckbTagOne = dialogview.findViewById(R.id.checkbox_tag1);
+        CheckBox ckbTagTwo = dialogview.findViewById(R.id.checkbox_tag2);
+        CheckBox ckbTagThree = dialogview.findViewById(R.id.checkbox_tag3);
+        CheckBox ckbTagFour = dialogview.findViewById(R.id.checkbox_tag4);
+        CheckBox ckbTagFive = dialogview.findViewById(R.id.checkbox_tag5);
+
+        if (cardTag != null) {
+            for (int i = 0; i < cardTag.size(); i++) {
+                if (cardTag.get(i) == 0) {
+                    ckbTagOne.setChecked(true);
+                }
+                if (cardTag.get(i) == 1) {
+                    ckbTagTwo.setChecked(true);
+                }
+                if (cardTag.get(i) == 2) {
+                    ckbTagThree.setChecked(true);
+                }
+                if (cardTag.get(i) == 3) {
+                    ckbTagFour.setChecked(true);
+                }
+                if (cardTag.get(i) == 4) {
+                    ckbTagFive.setChecked(true);
+                }
+            }
+        }
+
+        ckbTagOne.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    cardTag.add(0);
+                } else {
+                    for (int i = 0; i < cardTag.size(); i++) {
+                        if (cardTag.get(i) == 0) {
+                            cardTag.remove(i);
+                        }
+                    }
+                }
+            }
+        });
+        ckbTagTwo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    cardTag.add(1);
+                } else {
+                    for (int i = 0; i < cardTag.size(); i++) {
+                        if (cardTag.get(i) == 1) {
+                            cardTag.remove(i);
+                        }
+                    }
+                }
+            }
+        });
+        ckbTagThree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    cardTag.add(2);
+                } else {
+                    for (int i = 0; i < cardTag.size(); i++) {
+                        if (cardTag.get(i) == 2) {
+                            cardTag.remove(i);
+                        }
+                    }
+                }
+            }
+        });
+        ckbTagFour.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    cardTag.add(3);
+                } else {
+                    for (int i = 0; i < cardTag.size(); i++) {
+                        if (cardTag.get(i) == 3) {
+                            cardTag.remove(i);
+                        }
+                    }
+                }
+            }
+        });
+        ckbTagFive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    cardTag.add(4);
+                } else {
+                    for (int i = 0; i < cardTag.size(); i++) {
+                        if (cardTag.get(i) == 4) {
+                            cardTag.remove(i);
+                        }
+                    }
+                }
+            }
+        });
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                databaseReference.child("Card").child(card.getCardID()).child("cardTag").setValue(cardTag);
+                for (int z = 0; z < cardTag.size(); z++) {
+                    Log.d("aaa", cardTag.get(z).toString());
+                }
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        alertDialog.show();
+    }
+
+    private void showTag() {
+        if (card.getCardTag() != null) {
+            llnTag.setVisibility(View.VISIBLE);
+            txtTag.setVisibility(View.GONE);
+            for (int i = 0; i < card.getCardTag().size(); i++) {
+                if (card.getCardTag().get(i) == 0) {
+                    imgTagOne.setVisibility(View.VISIBLE);
+                }
+                if (card.getCardTag().get(i) == 1) {
+                    imgTagTwo.setVisibility(View.VISIBLE);
+                }
+                if (card.getCardTag().get(i) == 2) {
+                    imgTagThere.setVisibility(View.VISIBLE);
+                }
+                if (card.getCardTag().get(i) == 3) {
+                    imgTagFour.setVisibility(View.VISIBLE);
+                }
+                if (card.getCardTag().get(i) == 4) {
+                    imgTagFive.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    private void pickDate() {
+        DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DATE, dayOfMonth);
+                txtDeadline.setText(getString(R.string.expires) + " " + sdf.format(calendar.getTime()));
+                databaseReference.child("Card").child(card.getCardID()).child("cardDeadline").setValue(calendar.getTime());
+            }
+        };
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), listener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+        datePickerDialog.show();
+    }
+
+    private void addMember() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(R.string.add_member);
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View dialogview = inflater.inflate(R.layout.layout_dialog, null);
+        builder.setView(dialogview);
+        final EditText edtMemberEmail = dialogview.findViewById(R.id.edittextnhap);
+        edtMemberEmail.requestFocus();
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                databaseReference.child("User").addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        User user = dataSnapshot.getValue(User.class);
+                        if(user.getUserEmail().equals(edtMemberEmail.getText().toString())){
+                            card.getUserArrayList().add(user);
+                            databaseReference.child("Card").child(card.getCardID()).child("userArrayList").setValue(card.getUserArrayList());
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
 

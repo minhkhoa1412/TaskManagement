@@ -183,8 +183,11 @@ public class MainActivity extends AppCompatActivity {
         databaseReference.child("User").child(user_firebase.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                txtName.setText(dataSnapshot.getValue(User.class).getUserName());
-                Picasso.get().load(dataSnapshot.getValue(User.class).getUserAvata()).into(imgAvata);
+                User user = dataSnapshot.getValue(User.class);
+                if(user != null){
+                    txtName.setText(user.getUserName());
+                    Picasso.get().load(user.getUserAvata()).into(imgAvata);
+                }
             }
 
             @Override

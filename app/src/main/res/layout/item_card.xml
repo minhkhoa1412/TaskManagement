@@ -1,7 +1,7 @@
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"
     android:layout_marginBottom="16dp">
@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginBottom="4dp"
             android:visibility="gone">
 
             <ImageView
@@ -124,8 +125,8 @@
                 android:visibility="gone">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:layout_marginEnd="2dp"
                     android:src="@drawable/ic_time_white_24dp" />
 
@@ -143,6 +144,49 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_des_black_24dp"
                 android:visibility="gone" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/linear_infomation"
+            android:id="@+id/linear_user"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <de.hdodenhof.circleimageview.CircleImageView
+                app:civ_border_color="@color/colorAccent"
+                app:civ_border_width="1dp"
+                android:src="@drawable/avata_test"
+                android:id="@+id/image_avata_card"
+                android:visibility="gone"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_avata_card1"
+                app:civ_border_color="@color/colorAccent"
+                app:civ_border_width="1dp"
+                android:layout_marginStart="7dp"
+                android:visibility="gone"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_avata_card2"
+                app:civ_border_color="@color/colorAccent"
+                app:civ_border_width="1dp"
+                android:layout_marginStart="7dp"
+                android:visibility="gone"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:text="+2"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"
+                android:textColor="@android:color/black"
+                android:id="@+id/textview_count_card"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </RelativeLayout>
 

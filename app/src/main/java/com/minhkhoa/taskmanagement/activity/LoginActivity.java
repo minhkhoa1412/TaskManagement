@@ -107,8 +107,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Bundle bundle =  new Bundle();
                     bundle.putString("user_email", email);
                     intent.putExtra("bundleuser",bundle);
-                    startActivity(intent);
                     finish();
+                    startActivity(intent);
                 }
             }
         });

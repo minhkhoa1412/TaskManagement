@@ -30,4 +30,10 @@
     <string name="edit">Edit</string>
     <string name="card_des_empty">Click here to add describe</string>
     <string name="add_task">Add a task</string>
+    <string name="tag">Tag...</string>
+    <string name="deadline">Expiration date...</string>
+    <string name="expires">Expires on </string>
+    <string name="member">Member list</string>
+    <string name="chat">Chat</string>
+    <string name="add_member">Add member</string>
 </resources>
