@@ -16,4 +16,5 @@ public class Constant {
     public static final String BUNDLE_LIST_TO_CHAT = "BUNDLE_LIST_TO_CHAT";
     public static final String CHAT_FRAGMENTS = "CHAT_FRAGMENTS";
     public static final String BOARD_ID_FOR_CHAT_CARD = "BOARD_ID_FOR_CHAT_CARD";
+    public static final String USER_TO_BOARD_INVITED = "USER_TO_BOARD_INVITED";
 }

@@ -8,6 +8,7 @@
     <string name="enter_username">Plese enter username</string>
     <string name="enter_password">Plese enter password</string>
     <string name="login_successfully">Login Successfully</string>
+    <string name="login_fail">Login Fail, Please try again</string>
     <string name="personal_board">Personal Board</string>
     <string name="action_notification">Notifications</string>
     <string name="action_search">Search</string>
@@ -43,4 +44,9 @@
     <string name="add_success">Member successfully added</string>
     <string name="delete">Delete</string>
     <string name="archive">Archive</string>
+    <string name="title_activity_board_invited">BoardInvitedActivity</string>
+    <string name="invited_board">Invited Board</string>
+    <string name="chat_message">Chat message</string>
+    <string name="permission">You do not have permission.Please contact the administrator.</string>
+    <string name="contact">Contact to administrator</string>
 </resources>

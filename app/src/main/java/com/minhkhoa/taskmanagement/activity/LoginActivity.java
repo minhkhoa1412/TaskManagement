@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             signUpUser(edtUsername.getText().toString(),edtPassword.getText().toString());
         }
         if(v == btnLogin){
-            logInUser(edtUsername.getText().toString(),edtPassword.getText().toString());
+            logInUser(edtUsername.getText().toString().trim(),edtPassword.getText().toString().trim());
         }
     }
 
@@ -130,6 +130,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(LoginActivity.this, getString(R.string.login_successfully), Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(LoginActivity.this,MainActivity.class));
                     finish();
+                } else {
+                    Toast.makeText(LoginActivity.this, getString(R.string.login_fail), Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -30,12 +30,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.minhkhoa.taskmanagement.R;
+import com.minhkhoa.taskmanagement.activity.CardDetailsActivity;
 import com.minhkhoa.taskmanagement.adapter.MemberAdapter;
 import com.minhkhoa.taskmanagement.model.Card;
 import com.minhkhoa.taskmanagement.model.User;
@@ -46,6 +49,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -53,6 +57,7 @@ public class CardDetailsFragment extends Fragment {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = database.getReference();
+    FirebaseUser user_firebase = FirebaseAuth.getInstance().getCurrentUser();
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     FloatingActionButton fab;
@@ -144,17 +149,25 @@ public class CardDetailsFragment extends Fragment {
     }
 
     private void init() {
+        btnAddMember.setVisibility(View.GONE);
         fab.hide();
         card = (Card) getArguments().getSerializable(Constant.CARD_FRAGMENTS);
-
         boardID = getArguments().getString(Constant.BOARD_ID_FOR_CHAT_CARD);
         userArrayList = new ArrayList<>();
+
+        for(int i = 0; i < card.getUserArrayList().size(); i ++){
+            if(card.getUserArrayList().get(i).getUserID().equals(user_firebase.getUid())){
+                if(card.getUserArrayList().get(i).getUserPermission() == 1){
+                    btnAddMember.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+
         databaseReference.child("Board").child(boardID).child("userArrayList").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 User user = dataSnapshot.getValue(User.class);
                 userArrayList.add(user);
-                Log.d("aaa",userArrayList.size() +"");
             }
 
             @Override
@@ -199,6 +212,7 @@ public class CardDetailsFragment extends Fragment {
         if (card.getCardDeadline() != null) {
             txtDeadline.setText(getString(R.string.expires) + " " + SimpleDayFormat.formatDate(card.getCardDeadline()));
         }
+
     }
 
     private void showDialog(String a) {
@@ -407,6 +421,10 @@ public class CardDetailsFragment extends Fragment {
                 }
             }
         }
+    }
+
+    public ArrayList<User> getUserArrayList(){
+        return this.userArrayList;
     }
 
     private void pickDate() {

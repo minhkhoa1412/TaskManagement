@@ -1,27 +1,34 @@
 package com.minhkhoa.taskmanagement.activity;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.minhkhoa.taskmanagement.R;
 import com.minhkhoa.taskmanagement.adapter.FragmentsAdapter;
 import com.minhkhoa.taskmanagement.fragment.CardChatFragment;
 import com.minhkhoa.taskmanagement.fragment.CardDetailsFragment;
 import com.minhkhoa.taskmanagement.fragment.CardTaskFragment;
 import com.minhkhoa.taskmanagement.model.Card;
+import com.minhkhoa.taskmanagement.model.User;
 import com.minhkhoa.taskmanagement.util.Constant;
 
 import java.util.ArrayList;
 
 public class CardDetailsActivity extends AppCompatActivity {
+    FirebaseUser user_firebase = FirebaseAuth.getInstance().getCurrentUser();
 
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -29,6 +36,10 @@ public class CardDetailsActivity extends AppCompatActivity {
     FragmentsAdapter adapter;
     ArrayList<Fragment> fragmentArrayList;
     ArrayList<String> titleArrayList;
+
+    CardDetailsFragment cardDetailsFragment;
+    CardTaskFragment cardTaskFragment;
+    CardChatFragment cardChatFragment;
 
     String cardID;
     String cardName;
@@ -39,6 +50,8 @@ public class CardDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_details);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         addControls();
         getDataFormCardActivity();
@@ -67,9 +80,9 @@ public class CardDetailsActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putString(Constant.BOARD_ID_FOR_CHAT_CARD,boardID);
         bundle.putSerializable(Constant.CARD_FRAGMENTS,card);
-        CardDetailsFragment cardDetailsFragment = new CardDetailsFragment();
-        CardTaskFragment cardTaskFragment = new CardTaskFragment();
-        CardChatFragment cardChatFragment = new CardChatFragment();
+        cardDetailsFragment = new CardDetailsFragment();
+        cardTaskFragment = new CardTaskFragment();
+        cardChatFragment = new CardChatFragment();
         cardDetailsFragment.setArguments(bundle);
         cardTaskFragment.setArguments(bundle);
         cardChatFragment.setArguments(bundle);

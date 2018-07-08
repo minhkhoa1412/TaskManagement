@@ -100,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                             Board board2 = dataSnapshot.getValue(Board.class);
-                            for(int i = 0; i < boardArrayList.size(); i++){
-                                if(boardArrayList.get(i).getBoardID().equals(board2.getBoardID())){
-                                    boardArrayList.set(i,board2);
+                            for (int i = 0; i < boardArrayList.size(); i++) {
+                                if (boardArrayList.get(i).getBoardID().equals(board2.getBoardID())) {
+                                    boardArrayList.set(i, board2);
                                 }
                             }
                             adapter.notifyDataSetChanged();
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
-                if(user != null){
+                if (user != null) {
                     user.setUserPermission(1);
                 }
                 userArrayList.add(user);
@@ -208,9 +208,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                if(user != null){
+                if (user != null) {
                     txtName.setText(user.getUserName());
-                    Picasso.get().load(user.getUserAvata()).into(imgAvata);
+                    Picasso.get().load(user.getUserAvata()).fit().centerCrop().into(imgAvata);
                 }
             }
 
@@ -233,11 +233,13 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_notifi) {
             Toast.makeText(this, "Noti Menu Clicked", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.action_search) {
-            startActivity(new Intent(MainActivity.this,CardActivity.class));
+            startActivity(new Intent(MainActivity.this, CardActivity.class));
         } else if (id == R.id.action_signout) {
             firebaseAuth.signOut();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
+        } else if (id == R.id.action_board_invited) {
+            startActivity(new Intent(MainActivity.this,BoardInvitedActivity.class).putExtra(Constant.USER_TO_BOARD_INVITED,user));
         }
         return super.onOptionsItemSelected(item);
     }
