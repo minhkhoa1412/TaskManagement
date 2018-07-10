@@ -36,6 +36,8 @@ import com.kc.unsplash.models.Photo;
 import com.minhkhoa.taskmanagement.R;
 import com.minhkhoa.taskmanagement.adapter.BoardAdapter;
 import com.minhkhoa.taskmanagement.model.Board;
+import com.minhkhoa.taskmanagement.model.Chat;
+import com.minhkhoa.taskmanagement.model.ChatChannel;
 import com.minhkhoa.taskmanagement.model.User;
 import com.minhkhoa.taskmanagement.util.Constant;
 import com.squareup.picasso.NetworkPolicy;
@@ -279,6 +281,16 @@ public class MainActivity extends AppCompatActivity {
         board.setBoardName(name);
         board.setUserID(user_firebase.getUid());
         board.setUserArrayList(userArrayList);
+
+        //add chat channel
+        ArrayList<Chat> chatArrayList = new ArrayList<>();
+        ChatChannel chatChannel = new ChatChannel();
+        chatChannel.setBoardcardID(board.getBoardID());
+        chatChannel.setUserArrayList(board.getUserArrayList());//có tv
+        chatChannel.setChannelName(getString(R.string.general));
+        chatChannel.setChannelID(databaseReference.push().getKey());
+        chatChannel.setChatArrayList(chatArrayList);
+        databaseReference.child("Chat").child(chatChannel.getChannelID()).setValue(chatChannel);
     }
 
     public void randomImageFormUnsplash() {

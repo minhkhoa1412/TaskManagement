@@ -43,7 +43,6 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
             imgAvata = itemView.findViewById(R.id.image_avata_member);
             btnDelete = itemView.findViewById(R.id.button_delete);
         }
-
     }
 
     @Override
@@ -66,11 +65,14 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
     private ArrayList<User> userArrayList;
     private Context context;
     private String cardID;
+    private String userID;
+    private int flag = 0;
 
-    public MemberAdapter(Context context, ArrayList<User> userArrayList,String cardID) {
+    public MemberAdapter(Context context, ArrayList<User> userArrayList,String cardID,String userID) {
         this.context = context;
         this.userArrayList = userArrayList;
         this.cardID = cardID;
+        this.userID = userID;
     }
 
     @Override
@@ -81,8 +83,14 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int i) {
-        if(i == 0){
-            viewHolder.btnDelete.setVisibility(View.GONE);
+        if(userArrayList.get(i).getUserID().equals(userID) && i == 0){
+            flag = 1;
+        }
+        if(userArrayList.get(i).getUserID().equals(userID) && i !=0 && flag == 0){
+            viewHolder.btnDelete.setVisibility(View.VISIBLE);
+        }
+        if(flag == 1 && i != 0 ){
+            viewHolder.btnDelete.setVisibility(View.VISIBLE);
         }
 
         viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {

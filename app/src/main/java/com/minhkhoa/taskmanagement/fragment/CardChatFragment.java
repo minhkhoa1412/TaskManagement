@@ -242,7 +242,12 @@ public class CardChatFragment extends Fragment {
         edtChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lvChat.setSelection(chatChannel.getChatArrayList().size());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        lvChat.smoothScrollToPosition(chatChannel.getChatArrayList().size());
+                    }
+                },500);
             }
         });
 
@@ -253,7 +258,6 @@ public class CardChatFragment extends Fragment {
                 intent.setType("plain/text");
                 intent.putExtra(Intent.EXTRA_EMAIL, new String[]{userAdminEmail});
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Require conversation permission");
-
                 startActivity(Intent.createChooser(intent, "Send Email"));
             }
         });

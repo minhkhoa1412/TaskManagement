@@ -49,4 +49,5 @@
     <string name="chat_message">Chat message</string>
     <string name="permission">You do not have permission.Please contact the administrator.</string>
     <string name="contact">Contact to administrator</string>
+    <string name="general">General</string>
 </resources>

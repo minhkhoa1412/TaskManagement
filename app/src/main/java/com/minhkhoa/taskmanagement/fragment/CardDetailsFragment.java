@@ -191,7 +191,7 @@ public class CardDetailsFragment extends Fragment {
             }
         });
 
-        adapter = new MemberAdapter(getContext(),card.getUserArrayList(),card.getCardID());
+        adapter = new MemberAdapter(getContext(),card.getUserArrayList(),card.getCardID(),user_firebase.getUid());
         LinearLayoutManager llm = new LinearLayoutManager(getContext()){
             @Override
             public boolean canScrollVertically() {

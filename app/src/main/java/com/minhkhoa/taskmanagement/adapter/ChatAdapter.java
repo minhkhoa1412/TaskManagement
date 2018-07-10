@@ -5,10 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.minhkhoa.taskmanagement.R;
 import com.minhkhoa.taskmanagement.model.Chat;
+import com.minhkhoa.taskmanagement.util.SetMargin;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -17,7 +20,7 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatAdapter extends BaseAdapter {
-    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     SimpleDateFormat stf = new SimpleDateFormat("HH:mm");
 
     Context context;
@@ -47,7 +50,11 @@ public class ChatAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = inflater.inflate(R.layout.item_chat,null);
+        if(position == 0){
+            convertView = inflater.inflate(R.layout.item_chat_first,null);
+        } else {
+            convertView = inflater.inflate(R.layout.item_chat,null);
+        }
 
         CircleImageView imgAvata = convertView.findViewById(R.id.image_avata);
         TextView txtName = convertView.findViewById(R.id.textview_name_chat);

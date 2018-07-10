@@ -30,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.minhkhoa.taskmanagement.R;
 import com.minhkhoa.taskmanagement.adapter.ListAdapter;
 import com.minhkhoa.taskmanagement.model.Board;
+import com.minhkhoa.taskmanagement.model.ChatChannel;
 import com.minhkhoa.taskmanagement.model.List;
 import com.minhkhoa.taskmanagement.util.Constant;
 
@@ -43,6 +44,7 @@ public class ListActivity extends AppCompatActivity {
     String boardName;
     int boardPosition;
     String listKey;
+    String chatChannelID;
     ArrayList<List> listArrayList;
     ListAdapter adapter;
     Board board;
@@ -65,7 +67,26 @@ public class ListActivity extends AppCompatActivity {
         prepareUI();
         getDataListFormFirebase();
         addEvents();
+        getDataChatFormFirebase();
+    }
 
+    private void getDataChatFormFirebase() {
+        databaseReference.child("Chat").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    ChatChannel chatChannel = snapshot.getValue(ChatChannel.class);
+                    if(chatChannel.getBoardcardID().equals(board.getBoardID()) && chatChannel.getChannelName().equals(getString(R.string.general))){
+                        chatChannelID = chatChannel.getChannelID();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void addEvents() {
@@ -227,6 +248,7 @@ public class ListActivity extends AppCompatActivity {
             Intent intent = new Intent(ListActivity.this,ChatActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable(Constant.BOARD_CHAT,board);
+            bundle.putString(Constant.CHAT_CHANNEL_ID,chatChannelID);
             intent.putExtra(Constant.BUNDLE_LIST_TO_CHAT,bundle);
             startActivity(intent);
         }

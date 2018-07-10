@@ -16,15 +16,20 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.minhkhoa.taskmanagement.R;
 import com.minhkhoa.taskmanagement.adapter.MemberBoardAdapter;
 import com.minhkhoa.taskmanagement.model.Board;
 import com.minhkhoa.taskmanagement.model.Card;
+import com.minhkhoa.taskmanagement.model.Chat;
+import com.minhkhoa.taskmanagement.model.ChatChannel;
 import com.minhkhoa.taskmanagement.model.User;
 import com.minhkhoa.taskmanagement.util.Constant;
 
@@ -33,11 +38,15 @@ import java.util.ArrayList;
 public class BoardMemberFragment extends Fragment {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = database.getReference();
+    FirebaseUser user_firebase = FirebaseAuth.getInstance().getCurrentUser();
+
+
     MemberBoardAdapter adapter;
 
     View view;
     Board board;
     ListView lvMember;
+    String chatChannelID;
     ImageButton btnAddMember;
     EditText edtAddMember;
     ArrayList<User> userArrayList;
@@ -93,6 +102,7 @@ public class BoardMemberFragment extends Fragment {
                             }
                             board.getUserArrayList().add(user);
                             databaseReference.child("Board").child(board.getBoardID()).child("userArrayList").setValue(board.getUserArrayList());
+                            databaseReference.child("Chat").child(chatChannelID).child("userArrayList").setValue(board.getUserArrayList());
                             Toast.makeText(getContext(), getString(R.string.add_success), Toast.LENGTH_SHORT).show();
                         }
                         adapter.notifyDataSetChanged();
@@ -125,11 +135,13 @@ public class BoardMemberFragment extends Fragment {
 
     private void init() {
         board = (Board) getArguments().getSerializable(Constant.CHAT_FRAGMENTS);
+        chatChannelID = getArguments().getString(Constant.CHAT_CHANNEL_ID);
         btnAddMember.setVisibility(View.GONE);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         userArrayList = board.getUserArrayList();
-        adapter = new MemberBoardAdapter(getContext(),userArrayList);
+
+        adapter = new MemberBoardAdapter(getContext(),userArrayList,user_firebase.getUid(),board.getBoardID(),chatChannelID);
         lvMember.setAdapter(adapter);
     }
 
