@@ -72,27 +72,34 @@ public class BoardChatFragment extends Fragment {
     }
 
     private void getChatFormFirebaseTest() {
+        //get chat data
         databaseReference.child("Chat").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                count++;
+                count++;//set var count to count children -> if count > children -> get data done
                 ChatChannel chatChannel = dataSnapshot.getValue(ChatChannel.class);
-                if(chatChannel.getBoardcardID().equals(board.getBoardID())){
-                    if(chatChannel.getChatArrayList() == null){
-                        chatChannel.setChatArrayList(new ArrayList<Chat>());
+                if(chatChannel.getBoardcardID().equals(board.getBoardID())){//collect all chat channel of current board
+                    if(chatChannel.getChatArrayList() == null){//check if chat array list null -> no one chat conversation in list -> init arraylist
+                        chatChannel.setChatArrayList(new ArrayList<Chat>());//init arraylist
                     }
-                    chatChannelArrayList.add(chatChannel);
+                    chatChannelArrayList.add(chatChannel);//if arraylist null -> init. 100% list not null -> add to chat channel
                 }
-                if(count >= dataSnapshot.getChildrenCount()){
-                    count = 0;
+                if(count >= dataSnapshot.getChildrenCount()){//check if dataSnapshot get data down -> go in if statment
+                    count = 0;//set count back 0 to start again override method
+                    /*add list chat to another list -> another list will be adapted to listview
+                    * index is position channel in chatChannelArrayList. index default is 0.
+                    * in order word, general is default channel. because channel general have position 0 in chatChannelArrayList*/
                     chatForAdapterArrayList.addAll(chatChannelArrayList.get(index).getChatArrayList());
-                    adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();//notify data after add data
                     lvChat.smoothScrollToPosition(chatChannelArrayList.get(index).getChatArrayList().size());
                 }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                /*method override onChildChanged will run when have data change on this node
+                * in this case, when push a 1 object chat to firebase -> data change once
+                * so, this method will run only 1, and dataSnapshot have data only data ,this data change*/
                 ChatChannel chatChannel = dataSnapshot.getValue(ChatChannel.class);
                 if(chatChannel.getBoardcardID().equals(board.getBoardID())){
                     chatChannelArrayList.get(index).getChatArrayList().clear();
@@ -160,6 +167,7 @@ public class BoardChatFragment extends Fragment {
         btnChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //create object chat and set full atribute for obj
                 Chat chat = new Chat();
                 chat.setChatID(databaseReference.push().getKey());
                 chat.setChatTime(Calendar.getInstance().getTime());
@@ -167,9 +175,10 @@ public class BoardChatFragment extends Fragment {
                 chat.setUserName(user.getUserName());
                 chat.setUserAvata(user.getUserAvata());
                 chat.setChatContent(edtChat.getText().toString().trim());
+                //in this case, channel is 0 -> in general channel. add this chat in first item in chatChannelArrayList
                 chatChannelArrayList.get(index).getChatArrayList().add(chat);
                 databaseReference.child("Chat").child(chatChannelArrayList.get(index).getChannelID()).setValue(chatChannelArrayList.get(index));
-                edtChat.setText("");
+                edtChat.setText("");//when done. clear all chat content in edittext
             }
         });
 
@@ -188,6 +197,7 @@ public class BoardChatFragment extends Fragment {
 
     private void init() {
         btnChat.setVisibility(View.GONE);
+        //ở đây t nhận object board từ bên activity ChatActivity. Fragment BoardChatFragment nằm trong ChatActivity.Tự tạo 1 cái mà giả lập xài
         board = (Board) getArguments().getSerializable(Constant.CHAT_FRAGMENTS);
         chatChannelArrayList = new ArrayList<>();
         chatArrayList = new ArrayList<>();

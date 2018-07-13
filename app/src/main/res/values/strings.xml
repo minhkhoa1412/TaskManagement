@@ -50,4 +50,7 @@
     <string name="permission">You do not have permission.Please contact the administrator.</string>
     <string name="contact">Contact to administrator</string>
     <string name="general">General</string>
+    <string name="please">Please wait...</string>
+    <string name="logging">Logging in</string>
+    <string name="regis">Registering user</string>
 </resources>

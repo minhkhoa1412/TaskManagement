@@ -1,16 +1,20 @@
 package com.minhkhoa.taskmanagement.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText edtUsername, edtPassword;
     AnimationDrawable animationDrawable;
     RelativeLayout relativeLayout;
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //set trans stt bar
         setStatusBarTranslucent(true);
         addControls();
+        dialog = new ProgressDialog(this);
         //events
         txtSignUp.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
@@ -94,15 +100,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //check empty
         if(TextUtils.isEmpty(email)){
             Toast.makeText(this, getString(R.string.enter_username), Toast.LENGTH_SHORT).show();
+            return;
         }
         if(TextUtils.isEmpty(password)){
             Toast.makeText(this, getString(R.string.enter_password), Toast.LENGTH_SHORT).show();
+            return;
         }
+        dialog.show(this,getString(R.string.please),getString(R.string.regis),true,false);
         //create user
         firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
+                    dialog.dismiss();
                     Intent intent = new Intent(LoginActivity.this,UpdateInfoActivity.class);
                     Bundle bundle =  new Bundle();
                     bundle.putString("user_email", email);
@@ -118,18 +128,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //check empty
         if(TextUtils.isEmpty(email)){
             Toast.makeText(this, getString(R.string.enter_username), Toast.LENGTH_SHORT).show();
+            return;
         }
         if(TextUtils.isEmpty(password)){
             Toast.makeText(this, getString(R.string.enter_password), Toast.LENGTH_SHORT).show();
+            return;
         }
+        dialog.show(this,getString(R.string.please),getString(R.string.logging),true,false);
         //login user
         firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
+                    dialog.dismiss();
                     Toast.makeText(LoginActivity.this, getString(R.string.login_successfully), Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(LoginActivity.this,MainActivity.class));
                     finish();
+                    startActivity(new Intent(LoginActivity.this,MainActivity.class));
                 } else {
                     Toast.makeText(LoginActivity.this, getString(R.string.login_fail), Toast.LENGTH_SHORT).show();
                 }

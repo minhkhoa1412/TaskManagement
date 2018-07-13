@@ -449,7 +449,7 @@ public class CardDetailsFragment extends Fragment {
         final View dialogview = inflater.inflate(R.layout.layout_dialog_card_details, null);
         builder.setView(dialogview);
 
-        final ListView lvMember = dialogview.findViewById(R.id.listview_member_dialog);
+        final ListView lvMember = dialogview.findViewById(R.id.listview_member_dialog);//ánh xạ
 
         class MemberDialogAdapter extends BaseAdapter {
             Context context;
