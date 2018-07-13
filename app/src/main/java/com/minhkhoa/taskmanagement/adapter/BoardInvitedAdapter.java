@@ -75,7 +75,7 @@ public class BoardInvitedAdapter extends BaseAdapter {
         for (int j = 0 ; j < boardArrayList.get(position).getUserArrayList().size() ; j ++){
             if(boardArrayList.get(position).getUserArrayList().get(j).getUserPermission() == 1){
                 viewHolder.txtNameUser.setText(boardArrayList.get(position).getUserArrayList().get(j).getUserName());
-                Picasso.get().load(boardArrayList.get(position).getUserArrayList().get(j).getUserAvata()).fit().centerCrop().into(viewHolder.imgAvata);
+                Picasso.get().load(boardArrayList.get(position).getUserArrayList().get(j).getUserAvata()).resize(300,300).centerCrop().into(viewHolder.imgAvata);
             }
         }
 

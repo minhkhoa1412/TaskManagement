@@ -102,7 +102,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
             }
         });
 
-        Picasso.get().load(userArrayList.get(i).getUserAvata()).into(viewHolder.imgAvata);
+        Picasso.get().load(userArrayList.get(i).getUserAvata()).resize(300,300).centerCrop().into(viewHolder.imgAvata);
         viewHolder.txtName.setText(userArrayList.get(i).getUserName());
         viewHolder.txtEmail.setText(userArrayList.get(i).getUserEmail());
     }

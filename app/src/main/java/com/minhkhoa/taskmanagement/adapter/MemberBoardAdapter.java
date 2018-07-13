@@ -83,7 +83,7 @@ public class MemberBoardAdapter extends BaseAdapter {
             }
         });
 
-        Picasso.get().load(userArrayList.get(position).getUserAvata()).into(imgAvata);
+        Picasso.get().load(userArrayList.get(position).getUserAvata()).resize(300,300).centerCrop().into(imgAvata);
         txtName.setText(userArrayList.get(position).getUserName());
         txtEmail.setText(userArrayList.get(position).getUserEmail());
 

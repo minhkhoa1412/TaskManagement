@@ -53,4 +53,5 @@
     <string name="please">Please wait...</string>
     <string name="logging">Logging in</string>
     <string name="regis">Registering user</string>
+    <string name="dot">.</string>
 </resources>

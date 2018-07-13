@@ -10,10 +10,11 @@
     android:layout_height="match_parent">
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_marginTop="2dp"
         android:id="@+id/image_avata"
         android:src="@drawable/avata_test"
-        android:layout_width="45dp"
-        android:layout_height="45dp" />
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
 
     <TextView
         android:id="@+id/textview_name_chat"

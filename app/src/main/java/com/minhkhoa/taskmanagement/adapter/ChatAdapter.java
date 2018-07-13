@@ -61,7 +61,7 @@ public class ChatAdapter extends BaseAdapter {
         TextView txtTime = convertView.findViewById(R.id.textview_datetime_chat);
         TextView txtContent = convertView.findViewById(R.id.textview_content_chat);
 
-        Picasso.get().load(chatArrayList.get(position).getUserAvata()).fit().centerCrop().into(imgAvata);
+        Picasso.get().load(chatArrayList.get(position).getUserAvata()).resize(300,300).centerCrop().into(imgAvata);
         txtName.setText(chatArrayList.get(position).getUserName());
         txtContent.setText(chatArrayList.get(position).getChatContent());
         String time = stf.format(chatArrayList.get(position).getChatTime());

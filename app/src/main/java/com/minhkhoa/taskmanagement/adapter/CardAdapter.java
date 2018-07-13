@@ -125,26 +125,26 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             viewHolder.llnUser.setVisibility(View.VISIBLE);
             if (cardArrayList.get(i).getUserArrayList().size() == 2) {
                 viewHolder.imgAvataOne.setVisibility(View.VISIBLE);
-                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(1).getUserAvata()).fit().centerCrop().into(viewHolder.imgAvataOne);
+                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(1).getUserAvata()).resize(300,300).centerCrop().into(viewHolder.imgAvataOne);
             } else if (cardArrayList.get(i).getUserArrayList().size() == 3) {
                 viewHolder.imgAvataOne.setVisibility(View.VISIBLE);
-                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(1).getUserAvata()).fit().centerCrop().into(viewHolder.imgAvataOne);
+                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(1).getUserAvata()).resize(300,300).centerCrop().into(viewHolder.imgAvataOne);
                 viewHolder.imgAvataTwo.setVisibility(View.VISIBLE);
-                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(2).getUserAvata()).fit().centerCrop().into(viewHolder.imgAvataTwo);
+                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(2).getUserAvata()).resize(300,300).centerCrop().into(viewHolder.imgAvataTwo);
             } else if (cardArrayList.get(i).getUserArrayList().size() == 4) {
                 viewHolder.imgAvataOne.setVisibility(View.VISIBLE);
-                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(1).getUserAvata()).fit().centerCrop().into(viewHolder.imgAvataOne);
+                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(1).getUserAvata()).resize(300,300).centerCrop().into(viewHolder.imgAvataOne);
                 viewHolder.imgAvataTwo.setVisibility(View.VISIBLE);
-                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(2).getUserAvata()).fit().centerCrop().into(viewHolder.imgAvataTwo);
+                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(2).getUserAvata()).resize(300,300).centerCrop().into(viewHolder.imgAvataTwo);
                 viewHolder.imgAvataThree.setVisibility(View.VISIBLE);
-                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(3).getUserAvata()).fit().centerCrop().into(viewHolder.imgAvataThree);
+                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(3).getUserAvata()).resize(300,300).centerCrop().into(viewHolder.imgAvataThree);
             } else {
                 viewHolder.imgAvataOne.setVisibility(View.VISIBLE);
-                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(1).getUserAvata()).fit().centerCrop().into(viewHolder.imgAvataOne);
+                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(1).getUserAvata()).resize(300,300).centerCrop().into(viewHolder.imgAvataOne);
                 viewHolder.imgAvataTwo.setVisibility(View.VISIBLE);
-                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(2).getUserAvata()).fit().centerCrop().into(viewHolder.imgAvataTwo);
+                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(2).getUserAvata()).resize(300,300).centerCrop().into(viewHolder.imgAvataTwo);
                 viewHolder.imgAvataThree.setVisibility(View.VISIBLE);
-                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(3).getUserAvata()).fit().centerCrop().into(viewHolder.imgAvataThree);
+                Picasso.get().load(cardArrayList.get(i).getUserArrayList().get(3).getUserAvata()).resize(300,300).centerCrop().into(viewHolder.imgAvataThree);
                 viewHolder.txtCountMember.setVisibility(View.VISIBLE);
                 viewHolder.txtCountMember.setText("+" + String.valueOf(cardArrayList.get(i).getUserArrayList().size() - 4   ));
             }
