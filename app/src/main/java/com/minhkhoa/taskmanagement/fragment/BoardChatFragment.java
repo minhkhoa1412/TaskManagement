@@ -66,7 +66,7 @@ public class BoardChatFragment extends Fragment {
         addControls();
         init();
         getUserFormFirebase();
-        getChatFormFirebaseTest();
+//        getChatFormFirebaseTest();
         addEvents();
         return view;
     }

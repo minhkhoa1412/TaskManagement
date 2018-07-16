@@ -40,7 +40,6 @@ public class CardTaskFragment extends Fragment {
     String taskKey;
     ListView lvTask;
     View view;
-    FloatingActionButton fab;
     ImageButton btnAddTask;
     EditText edtAddTask;
     ArrayList<Task> taskArrayList;
@@ -148,6 +147,5 @@ public class CardTaskFragment extends Fragment {
         edtAddTask = view.findViewById(R.id.edittext_addtask);
         btnAddTask = view.findViewById(R.id.button_addtask);
         lvTask = view.findViewById(R.id.listview_task);
-        fab = view.findViewById(R.id.fab_fragments);
     }
 }
