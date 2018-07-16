@@ -3,6 +3,7 @@ package com.minhkhoa.taskmanagement.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,6 +40,7 @@ public class CardTaskFragment extends Fragment {
     String taskKey;
     ListView lvTask;
     View view;
+    FloatingActionButton fab;
     ImageButton btnAddTask;
     EditText edtAddTask;
     ArrayList<Task> taskArrayList;
@@ -146,5 +148,6 @@ public class CardTaskFragment extends Fragment {
         edtAddTask = view.findViewById(R.id.edittext_addtask);
         btnAddTask = view.findViewById(R.id.button_addtask);
         lvTask = view.findViewById(R.id.listview_task);
+        fab = view.findViewById(R.id.fab_fragments);
     }
 }

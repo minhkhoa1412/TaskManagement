@@ -54,6 +54,11 @@ public class ChatActivity extends AppCompatActivity {
         getDataFormListActivity();
         init();
         prepareUI();
+        addEvents();
+    }
+
+    private void addEvents() {
+        // TODO: events tab selected
     }
 
     private void getDataFormListActivity() {
