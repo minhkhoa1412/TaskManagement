@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -150,6 +151,8 @@ public class CardDetailsFragment extends Fragment {
 
     private void init() {
         btnAddMember.setVisibility(View.GONE);
+        btnaddDeadline.setVisibility(View.GONE);
+        btnAddTag.setVisibility(View.GONE);
         fab.hide();
         card = (Card) getArguments().getSerializable(Constant.CARD_FRAGMENTS);
         boardID = getArguments().getString(Constant.BOARD_ID_FOR_CHAT_CARD);
@@ -159,6 +162,8 @@ public class CardDetailsFragment extends Fragment {
             if(card.getUserArrayList().get(i).getUserID().equals(user_firebase.getUid())){
                 if(card.getUserArrayList().get(i).getUserPermission() == 1){
                     btnAddMember.setVisibility(View.VISIBLE);
+                    btnaddDeadline.setVisibility(View.VISIBLE);
+                    btnAddTag.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -381,9 +386,7 @@ public class CardDetailsFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 databaseReference.child("Card").child(card.getCardID()).child("cardTag").setValue(cardTag);
-                for (int z = 0; z < cardTag.size(); z++) {
-                    Log.d("aaa", cardTag.get(z).toString());
-                }
+                reloadFragment();
             }
         });
 
@@ -542,5 +545,10 @@ public class CardDetailsFragment extends Fragment {
                 alertDialog.dismiss();
             }
         });
+    }
+
+    private void reloadFragment(){
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(CardDetailsFragment.this).attach(CardDetailsFragment.this).commit();
     }
 }

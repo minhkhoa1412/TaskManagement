@@ -3,6 +3,7 @@ package com.minhkhoa.taskmanagement.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +22,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,6 +42,8 @@ import java.util.ArrayList;
 public class ListActivity extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = database.getReference();
+    FirebaseUser user_firebase = FirebaseAuth.getInstance().getCurrentUser();
+
 
     String boardID;
     String boardName;
@@ -201,6 +206,7 @@ public class ListActivity extends AppCompatActivity {
     }
 
     private void prepareUI() {
+        fab.hide();
         //set title
         getSupportActionBar().setTitle("List");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -213,6 +219,19 @@ public class ListActivity extends AppCompatActivity {
             viewTitle.setBackgroundResource(R.drawable.rounded_label_3);
         }
         txtTitle.setText(boardName);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                for(int i =0; i < board.getUserArrayList().size(); i++){
+                    if(board.getUserArrayList().get(i).getUserID().equals(user_firebase.getUid())){
+                        if(board.getUserArrayList().get(i).getUserPermission() == 1){
+                            fab.show();
+                        }
+                    }
+                }
+            }
+        },500);
     }
 
     private void addControls() {

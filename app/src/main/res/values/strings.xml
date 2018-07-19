@@ -54,4 +54,10 @@
     <string name="logging">Logging in</string>
     <string name="regis">Registering user</string>
     <string name="dot">.</string>
+    <string name="activity">Activity</string>
+    <string name="added">added</string>
+    <string name="to_this_card">to this card</string>
+    <string name="in_this_card">in this card</string>
+    <string name="has_done">has done</string>
+    <string name="not_complete">not complete</string>
 </resources>

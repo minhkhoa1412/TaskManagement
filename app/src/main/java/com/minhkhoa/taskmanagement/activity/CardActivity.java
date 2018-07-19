@@ -329,4 +329,9 @@ public class CardActivity extends AppCompatActivity {
 
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }

@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.minhkhoa.taskmanagement.R;
 import com.minhkhoa.taskmanagement.adapter.FragmentsAdapter;
+import com.minhkhoa.taskmanagement.fragment.CardActivityFragment;
 import com.minhkhoa.taskmanagement.fragment.CardChatFragment;
 import com.minhkhoa.taskmanagement.fragment.CardDetailsFragment;
 import com.minhkhoa.taskmanagement.fragment.CardTaskFragment;
@@ -33,13 +34,14 @@ public class CardDetailsActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
 
-    FragmentsAdapter adapter;
+    public static FragmentsAdapter adapter;
     ArrayList<Fragment> fragmentArrayList;
     ArrayList<String> titleArrayList;
 
     CardDetailsFragment cardDetailsFragment;
     CardTaskFragment cardTaskFragment;
     CardChatFragment cardChatFragment;
+    CardActivityFragment cardActivityFragment;
 
     String cardID;
     String cardName;
@@ -80,20 +82,26 @@ public class CardDetailsActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putString(Constant.BOARD_ID_FOR_CHAT_CARD,boardID);
         bundle.putSerializable(Constant.CARD_FRAGMENTS,card);
+
         cardDetailsFragment = new CardDetailsFragment();
         cardTaskFragment = new CardTaskFragment();
         cardChatFragment = new CardChatFragment();
+        cardActivityFragment = new CardActivityFragment();
+
         cardDetailsFragment.setArguments(bundle);
         cardTaskFragment.setArguments(bundle);
         cardChatFragment.setArguments(bundle);
+        cardActivityFragment.setArguments(bundle);
 
         fragmentArrayList.add(cardDetailsFragment);
         fragmentArrayList.add(cardTaskFragment);
         fragmentArrayList.add(cardChatFragment);
+        fragmentArrayList.add(cardActivityFragment);
 
         titleArrayList.add(getString(R.string.details));
         titleArrayList.add(getString(R.string.task));
         titleArrayList.add(getString(R.string.chat));
+        titleArrayList.add(getString(R.string.activity));
 
         adapter = new FragmentsAdapter(getSupportFragmentManager(),fragmentArrayList,titleArrayList);
         viewPager.setAdapter(adapter);

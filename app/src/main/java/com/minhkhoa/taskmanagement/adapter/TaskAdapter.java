@@ -14,24 +14,29 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.minhkhoa.taskmanagement.R;
+import com.minhkhoa.taskmanagement.model.Activity;
 import com.minhkhoa.taskmanagement.model.Task;
+import com.minhkhoa.taskmanagement.model.User;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class TaskAdapter extends BaseAdapter {
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference databaseReference = database.getReference();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference = database.getReference();
 
-    ArrayList<Task> taskArrayList;
-    LayoutInflater inflater;
-    Context context;
-    String cardID;
+    private ArrayList<Task> taskArrayList;
+    private LayoutInflater inflater;
+    private Context context;
+    private String cardID;
+    private User user;
 
-    public TaskAdapter(ArrayList<Task> taskArrayList, Context context, String cardID) {
+    public TaskAdapter(ArrayList<Task> taskArrayList, Context context, String cardID, User user) {
         this.taskArrayList = taskArrayList;
         this.context = context;
         this.cardID = cardID;
+        this.user = user;
         inflater = LayoutInflater.from(context);
     }
 
@@ -70,9 +75,30 @@ public class TaskAdapter extends BaseAdapter {
                 if(isChecked){
                     txtTask.setPaintFlags(txtTask.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG );
                     databaseReference.child("Task").child(cardID).child(taskArrayList.get(position).getTaskID()).child("taskStatus").setValue(true);
+
+                    String activityKey = databaseReference.push().getKey();
+                    Activity activity = new Activity();
+                    activity.setActivityID(activityKey);
+                    activity.setUserName(user.getUserName());
+                    activity.setUserAvata(user.getUserAvata());
+                    activity.setCardID(cardID);
+                    activity.setTaskName(context.getString(R.string.has_done) + " \'" + taskArrayList.get(position).getTaskName() + "\' " + context.getString(R.string.in_this_card));
+                    activity.setActivityTime(Calendar.getInstance().getTime());
+                    databaseReference.child("Activity").child(activityKey).setValue(activity);
+
                 } else {
                     txtTask.setPaintFlags(0);
                     databaseReference.child("Task").child(cardID).child(taskArrayList.get(position).getTaskID()).child("taskStatus").setValue(false);
+
+                    String activityKey = databaseReference.push().getKey();
+                    Activity activity = new Activity();
+                    activity.setActivityID(activityKey);
+                    activity.setUserName(user.getUserName());
+                    activity.setUserAvata(user.getUserAvata());
+                    activity.setCardID(cardID);
+                    activity.setTaskName(context.getString(R.string.not_complete) + " \'" + taskArrayList.get(position).getTaskName() + "\' " + context.getString(R.string.in_this_card));
+                    activity.setActivityTime(Calendar.getInstance().getTime());
+                    databaseReference.child("Activity").child(activityKey).setValue(activity);
                 }
             }
         });

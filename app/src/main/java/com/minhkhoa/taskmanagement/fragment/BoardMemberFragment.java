@@ -93,14 +93,14 @@ public class BoardMemberFragment extends Fragment {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         User user = dataSnapshot.getValue(User.class);
-                        if(user.getUserEmail().equals(email)){
+                        if(user.getUserEmail().equals(email)){//user preparing to add board-chat
                             for (int i = 0; i < userArrayList.size(); i++){
                                 if(user.getUserEmail().equals(userArrayList.get(i).getUserEmail())){
                                     Toast.makeText(getContext(), getString(R.string.already_have_member), Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                             }
-                            board.getUserArrayList().add(user);
+                            board.getUserArrayList().add(user);///not exits -> add local -> push all array to firebase
                             databaseReference.child("Board").child(board.getBoardID()).child("userArrayList").setValue(board.getUserArrayList());
                             databaseReference.child("Chat").child(chatChannelID).child("userArrayList").setValue(board.getUserArrayList());
                             Toast.makeText(getContext(), getString(R.string.add_success), Toast.LENGTH_SHORT).show();
