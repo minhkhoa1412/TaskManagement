@@ -106,6 +106,11 @@ public class BoardMemberFragment extends Fragment {
                             Toast.makeText(getContext(), getString(R.string.add_success), Toast.LENGTH_SHORT).show();
                         }
                         adapter.notifyDataSetChanged();
+                        //tạo 1 boardPush. thêm tv vào boardPush. sau đó push dữ liệu qua bên user. nếu user accept thì thực thi 104,105
+                        //class Notify sẽ có
+                        //userArrayList() = boardPush.getUserArrayList();
+                        //boardID = board.getBoardID();
+                        //chatChannelID = chatChannelI;
                     }
 
                     @Override

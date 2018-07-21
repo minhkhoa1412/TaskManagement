@@ -41,7 +41,8 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.BoardInvitedActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.NotificationActivity"></activity>
     </application>
 
 </manifest>
