@@ -220,18 +220,7 @@ public class ListActivity extends AppCompatActivity {
         }
         txtTitle.setText(boardName);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                for(int i =0; i < board.getUserArrayList().size(); i++){
-                    if(board.getUserArrayList().get(i).getUserID().equals(user_firebase.getUid())){
-                        if(board.getUserArrayList().get(i).getUserPermission() == 1){
-                            fab.show();
-                        }
-                    }
-                }
-            }
-        },500);
+        fab.show();
     }
 
     private void addControls() {

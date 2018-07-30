@@ -177,7 +177,12 @@ public class UpdateInfoActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        startActivity(new Intent(UpdateInfoActivity.this,MainActivity.class));
+        Intent intent = new Intent(UpdateInfoActivity.this,MainActivity.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("NAME_USER",user.getUserName());
+//        bundle.putByteArray("IMAGE_USER",data);
+//        intent.putExtra("UPDATE",bundle);
+        startActivity(intent);
         finish();
     }
 

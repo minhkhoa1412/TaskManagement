@@ -49,7 +49,7 @@ public class BoardMemberFragment extends Fragment {
     String chatChannelID;
     ImageButton btnAddMember;
     EditText edtAddMember;
-    ArrayList<User> userArrayList;
+    ArrayList<User> userArrayList = new ArrayList<>();
 
     int flag = 0;
 

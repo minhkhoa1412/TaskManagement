@@ -2,6 +2,9 @@ package com.minhkhoa.taskmanagement.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -17,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -188,14 +192,58 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        databaseReference.child("User").child(user_firebase.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+//        Intent intent = getIntent();
+//        if(intent != null){
+//            Bundle bundle = intent.getBundleExtra("UPDATE");
+//            //set text
+//            txtName.setText(bundle.getString("NAME_USER"));
+//            //set img
+//            byte[] byteArray = bundle.getByteArray("IMAGE_USER");
+//            Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+//            imgAvata.setImageBitmap(Bitmap.createScaledBitmap(bmp, imgAvata.getWidth(),imgAvata.getHeight(), false));
+//            Log.d("aaa","set bang intent");
+//        }
+
+
+//        databaseReference.child("User").child(user_firebase.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                User user = dataSnapshot.getValue(User.class);
+//                if (user != null) {
+//                    txtName.setText(user.getUserName());
+//                    Picasso.get().load(user.getUserAvata()).fit().centerCrop().into(imgAvata);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
+        databaseReference.child("User").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 User user = dataSnapshot.getValue(User.class);
-                if (user != null) {
+                if (user.getUserID().equals(user_firebase.getUid())) {
                     txtName.setText(user.getUserName());
                     Picasso.get().load(user.getUserAvata()).fit().centerCrop().into(imgAvata);
                 }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override

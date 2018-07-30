@@ -34,6 +34,7 @@ import com.minhkhoa.taskmanagement.model.Chat;
 import com.minhkhoa.taskmanagement.model.ChatChannel;
 import com.minhkhoa.taskmanagement.model.User;
 import com.minhkhoa.taskmanagement.util.Constant;
+import static java.lang.Math.toIntExact;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,6 +55,7 @@ public class BoardChatFragment extends Fragment {
     User user;
     int index = 0;
     int count = 0;
+    int childCount;
     ArrayList<ChatChannel> chatChannelArrayList;
     ArrayList<Chat> chatArrayList;
     ArrayList<Chat> chatForAdapterArrayList;
@@ -66,12 +68,23 @@ public class BoardChatFragment extends Fragment {
         addControls();
         init();
         getUserFormFirebase();
-//        getChatFormFirebaseTest();
+        getChatFormFirebaseTest();
         addEvents();
         return view;
     }
 
     private void getChatFormFirebaseTest() {
+        databaseReference.child("Chat").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                childCount = toIntExact(dataSnapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         //get chat data
         databaseReference.child("Chat").addChildEventListener(new ChildEventListener() {
             @Override
@@ -84,7 +97,7 @@ public class BoardChatFragment extends Fragment {
                     }
                     chatChannelArrayList.add(chatChannel);//if arraylist null -> init. 100% list not null -> add to chat channel
                 }
-                if(count >= dataSnapshot.getChildrenCount()){//check if dataSnapshot get data down -> go in if statment
+                if(count >= childCount){//check if dataSnapshot get data down -> go in if statment
                     count = 0;//set count back 0 to start again override method
                     /*add list chat to another list -> another list will be adapted to listview
                     * index is position channel in chatChannelArrayList. index default is 0.
