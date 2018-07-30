@@ -85,47 +85,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getBoard() {
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("Board").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild("Board")) {
-                    databaseReference.child("Board").addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            Board board = dataSnapshot.getValue(Board.class);
-                            if (board.getUserID().equals(user_firebase.getUid())) {
-                                boardArrayList.add(board);
-                            }
-                            adapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                            Board board2 = dataSnapshot.getValue(Board.class);
-                            for (int i = 0; i < boardArrayList.size(); i++) {
-                                if (boardArrayList.get(i).getBoardID().equals(board2.getBoardID())) {
-                                    boardArrayList.set(i, board2);
-                                }
-                            }
-                            adapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Board board = dataSnapshot.getValue(Board.class);
+                if(board.getUserID().equals(user_firebase.getUid())){
+                    boardArrayList.add(board);
                 }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
@@ -241,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         } else if (id == R.id.action_board_invited) {
-            startActivity(new Intent(MainActivity.this,BoardInvitedActivity.class).putExtra(Constant.USER_TO_BOARD_INVITED,user));
+            startActivity(new Intent(MainActivity.this, BoardInvitedActivity.class).putExtra(Constant.USER_TO_BOARD_INVITED, user));
         }
         return super.onOptionsItemSelected(item);
     }
